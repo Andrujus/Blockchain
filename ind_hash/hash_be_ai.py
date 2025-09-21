@@ -1,17 +1,26 @@
-import hashlib
+
 
 def hash_string():
-    user_input = input("Enter a string to hash: ")
-    hashed = hashlib.sha1(user_input.encode()).hexdigest()
-    print(f"SHA-1 hash of {user_input}: {hashed}")
+    user_input = input("Iveskite teksta: ")
+    MASK64 = (1 << 64) - 1
+    h = 0x1234567890abcdef
+    user_input = user_input.encode('utf-8')
+    for b in user_input:
+        h = (h*31 + b) & MASK64
+    print(f"Hash'as: {h}")
+
+
+
 loop = True
 while loop == True:
-    input_str = input("Ar norite hash'inti failą ar stringą? (f/s): ").strip().lower()
+    input_str = input("Ar norite hash'inti faila ar string? (f/s): ").strip().lower()
     if input_str == 'f':
-        break
+        file = input("Iveskite failo pavadinima: ")
+        hash_file(file)
+
     elif input_str == 's':
         hash_string()
     else:
-        print("Neteisinga įvestis")
+        print("Neteisinga ivestis")
         loop = False
         
