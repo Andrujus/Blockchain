@@ -1,8 +1,7 @@
 def rotl64(x, r):
     return ((x << r) & ((1 << 64) - 1))
 
-def hash_string():
-    user_input = input("Iveskite teksta: ")
+def hash_string(user_input):
     MASK64 = (1 << 64) - 1
     h1 = 0x1234567890abcdef
     h2 = 0xfedcba0987654321
@@ -27,6 +26,12 @@ def hash_string():
 
     print(f"Hash'as: {rez1}{rez2}{rez3}{rez4}")
 
+def hash_file(file):
+    with open(file) as f:
+        f_input = f.read()
+    hash_string(f_input)
+     
+
 
 
 loop = True
@@ -37,7 +42,8 @@ while loop == True:
         hash_file(file)
 
     elif input_str == 's':
-        hash_string()
+        user_input = input("Iveskite teksta: ")
+        hash_string(user_input)
     else:
         print("Neteisinga ivestis")
         loop = False
