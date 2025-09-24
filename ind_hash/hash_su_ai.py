@@ -62,7 +62,7 @@ def simplehash_bytes(data: bytes, rounds_per_block=3, final_rounds=16):
 def simplehash_string(s: str, **kwargs):
     return simplehash_bytes(s.encode('utf-8'), **kwargs)
 
-# --- 6) Pabandyk paleisti ---
+# --- Paleidimas ---
 if __name__ == "__main__":
     if len(sys.argv) > 1:
         file_path = sys.argv[1]
