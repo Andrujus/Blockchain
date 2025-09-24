@@ -145,3 +145,38 @@ Kiekvienam įvedimo dydžiui hash funkcija buvo paleista **5 kartus**, skaičiuo
 3 testas (1000 simbolių, bet vienas jų - skirtingas)
 - Gaunamas hash'as - "29d2ee16281f005165620a405ea054cb6840d0869d8e4ca817104314dd881032"
 Pradžia atrodo identiška, reikia tobulinimų.
+
+
+# Eksperimentinis tyrimas – Hash_be_ai
+
+## Efektyvumo matavimai
+
+Naudotas failas: `konstitucija.txt`  
+Kiekvienam įvedimo dydžiui hash funkcija buvo paleista **5 kartus**, skaičiuotas **vidutinis laikas (s)**.
+
+### Rezultatai
+
+| Eilučių skaičius | Vidutinis laikas (s) |
+|------------------|-----------------------|
+| 8                | 0.000270             |
+| 16               | 0.000740             |
+| 32               | 0.001906             |
+| 64               | 0.003254             |
+| 128              | 0.007656             |
+| 256              | 0.016723             |
+| 512              | 0.038718             |
+
+---
+
+### Grafikas
+
+<img width="1052" height="817" alt="image" src="https://github.com/user-attachments/assets/0ca0fe94-a241-44b1-9051-790d23392824" />
+
+
+---
+
+### Išvada
+- Hashavimo laikas **nuosekliai auga didėjant įvesties eilučių skaičiui**.  
+- Algoritmas **žymiai greitesnis** nei ankstesnis `simplehash.py`.  
+- Laikas didėja apytiksliai **linijiškai**: dvigubai daugiau eilučių → ~2–3 karto ilgesnis laikas.  
+- Šis hash algoritmas yra **skaliojamas ir efektyvus** net didesniems failams, todėl tinkamas realiems testams.  
