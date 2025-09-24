@@ -29,6 +29,45 @@
 - Jei paleidžiama be argumento → paprašo vartotojo įvesti tekstą ir grąžina jo hash
 
 
+### Testavimas Su AI
+
+# Eksperimentinis tyrimas – 1–3 punktai
+
+## 1. Testiniai failai ir jų hash’ai
+
+| Failo pavadinimas     | Turinys / aprašymas                 | Hash rezultatas (64 hex simboliai)                                   |
+|-----------------------|-------------------------------------|----------------------------------------------------------------------|
+| `a.txt`              | Vienas simbolis `a`                 | `db14591cbe4223503ff33ada24e9fdfb12bf9b0ca09bbb30e56273e2bda4c966` |
+| `empty.txt`          | Tuščias failas                      | `9dcf25a293048b0d4ed06288470f77be3a742a91cb88491d045aaa8ba0dd1b60` |
+| `test1000_1.txt`     | 1000+ atsitiktinių simbolių          | `63df1cc2c4ad81a6eb9504b38e2641f596393c71575bc78d91d0552ad363536d` |
+| `test1000_2.txt`     | 1000+ atsitiktinių simbolių, skiriasi vienu simboliu nuo `test1000_1.txt` | `5a3b7793758e8adcdda504e75f421729304d6d46fd1f8728aaf41860f6409cd7` |
+
+---
+
+## 2. Rezultato dydis
+- Visų failų hash’ai buvo **64 simbolių ilgio** (256 bitai).  
+- Išvada: išvedimo dydis **nepriklauso nuo įvedimo** → ✅ atitinka reikalavimus.
+
+---
+
+## 3. Deterministiškumas
+- Kiekvienas failas hash’uotas kelis kartus.  
+- Rezultatai **nesikeitė** – tas pats failas visada duoda tą patį hash’ą.  
+- Pvz.:
+  - `a.txt` → visada `db14591c...`  
+  - `empty.txt` → visada `9dcf25a2...`  
+
+Išvada: algoritmas yra **deterministinis** → ✅ atitinka reikalavimus.
+
+---
+
+## Tarpinė išvada
+- Pirmieji testai parodė, kad:
+  - Hash’as duoda **pastovaus dydžio** išvedimą.
+  - Tas pats įvedimas → visada tas pats hash’as.
+  - Net vieno simbolio skirtumas (**`test1000_1.txt` vs `test1000_2.txt`**) lemia visiškai skirtingą rezultatą (lavinos efekto požymis).
+
+Toliau galima atlikti **4 punktą – efektyvumo matavimus** su didesniais failais.
 ------------------------------------------------------------------------------------------------
 
 # hash_be_ai
