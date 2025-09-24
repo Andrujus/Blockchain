@@ -68,6 +68,45 @@ Išvada: algoritmas yra **deterministinis** → ✅ atitinka reikalavimus.
   - Net vieno simbolio skirtumas (**`test1000_1.txt` vs `test1000_2.txt`**) lemia visiškai skirtingą rezultatą (lavinos efekto požymis).
 
 Toliau galima atlikti **4 punktą – efektyvumo matavimus** su didesniais failais.
+
+# Eksperimentinis tyrimas – 4 punktas
+
+## 4. Efektyvumo matavimai
+
+Naudotas failas: `konstitucija.txt`  
+Kiekvienam įvedimo dydžiui hash funkcija buvo paleista **5 kartus**, skaičiuotas **vidutinis laikas (s)**.
+
+### Rezultatai
+
+| Eilučių skaičius | Vidutinis laikas (s) |
+|------------------|-----------------------|
+| 1                | 0.000285             |
+| 2                | 0.000485             |
+| 4                | 0.000794             |
+| 8                | 0.001256             |
+| 16               | 0.003446             |
+| 32               | 0.005585             |
+| 64               | 0.010981             |
+| 128              | 0.026271             |
+| 256              | 0.059209             |
+| 512              | 0.134168             |
+
+---
+
+### Grafikas
+
+<img width="1329" height="869" alt="image" src="https://github.com/user-attachments/assets/c680dea0-72ee-4eb7-89d9-be8d7b02ca4d" />
+
+
+---
+
+### Išvada
+- Hashavimo laikas **nuosekliai auga** didėjant įvedimo eilučių skaičiui.  
+- Net ir su mažu kiekiu eilučių matomas laipsniškas didėjimas.  
+- Dvigubai padidinus įvestį, laikas išauga maždaug **2–3 kartus** (mažose imtyse kiek mažiau, didesnėse – daugiau).  
+- Grafike aiškiai matoma, kad algoritmas veikia **artimai linijinei priklausomybei**, todėl yra **skaliojamas**.  
+- Tai reiškia, kad didesniems failams laikas bus ilgesnis, bet prognozuojamas ir be „staigių šuolių“.  
+
 ------------------------------------------------------------------------------------------------
 
 # hash_be_ai
