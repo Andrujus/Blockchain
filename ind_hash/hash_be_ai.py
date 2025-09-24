@@ -32,8 +32,6 @@ def hash_file(file):
     hash_string(f_input)
      
 
-
-
 loop = True
 while loop == True:
     input_str = input("Ar norite hash'inti faila ar string? (f/s): ").strip().lower()
