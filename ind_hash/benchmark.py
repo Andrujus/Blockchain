@@ -1,13 +1,13 @@
 import time
 import matplotlib.pyplot as plt
-from hash_be_ai import hash_string
+from hash_su_ai import simplehash_bytes
 
 def measure_time(data: bytes, repeats=5):
     """Pamatuoja hashavimo laiką, grąžina vidurkį (sekundėmis)."""
     times = []
     for _ in range(repeats):
         start = time.perf_counter()
-        hash_string(data)
+        simplehash_bytes(data)
         end = time.perf_counter()
         times.append(end - start)
     return sum(times) / len(times)
