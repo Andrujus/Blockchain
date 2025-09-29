@@ -138,11 +138,11 @@ Kiekvienam įvedimo dydžiui hash funkcija buvo paleista **5 kartus**, skaičiuo
 - Jei įvestis bloga → parodo klaidos žinutę ir baigia darbą
 
 ### Testavimas Be AI
-1 testas (vienas simbolis):
+- 1 testas (vienas simbolis):
 - Gaunamas hash'as - "cf133099bc86406de1479f0147b3325f7654150fedf79cb16091a2b3cdcbe743".
-2 testas (1000 simbolių):
+- 2 testas (1000 simbolių):
 - Gaunamas hash'as - "29d2ee16281f00510dd83234ac2542ee9ddb1bd0c7d1dbac559178753b0afa06"
-3 testas (1000 simbolių, bet vienas jų - skirtingas)
+- 3 testas (1000 simbolių, bet vienas jų - skirtingas)
 - Gaunamas hash'as - "29d2ee16281f005165620a405ea054cb6840d0869d8e4ca817104314dd881032"
 Pradžia atrodo identiška, reikia tobulinimų.
 
