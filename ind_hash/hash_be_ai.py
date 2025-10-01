@@ -25,24 +25,26 @@ def hash_string(user_input):
     rez4 = f"{h4:016x}"
 
     print(f"Hash'as: {rez1}{rez2}{rez3}{rez4}")
+    return f"{rez1}{rez2}{rez3}{rez4}"
 
 def hash_file(file):
     with open(file) as f:
         f_input = f.read()
     hash_string(f_input)
      
+if __name__ == "__main__":
 
-loop = True
-while loop == True:
-    input_str = input("Ar norite hash'inti faila ar string? (f/s): ").strip().lower()
-    if input_str == 'f':
-        file = input("Iveskite failo pavadinima: ")
-        hash_file(file)
+    loop = True
+    while loop == True:
+        input_str = input("Ar norite hash'inti faila ar string? (f/s): ").strip().lower()
+        if input_str == 'f':
+            file = input("Iveskite failo pavadinima: ")
+            hash_file(file)
 
-    elif input_str == 's':
-        user_input = input("Iveskite teksta: ")
-        hash_string(user_input)
-    else:
-        print("Neteisinga ivestis")
-        loop = False
+        elif input_str == 's':
+            user_input = input("Iveskite teksta: ")
+            hash_string(user_input)
+        else:
+            print("Neteisinga ivestis")
+            loop = False
         
