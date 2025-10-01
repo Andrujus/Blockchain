@@ -324,19 +324,6 @@ Hash funkcija `hash_be_ai.py` turi **stiprų lavinos efektą**. Vieno simbolio p
 
 SALT'as bei įvestis pasirinkti ypač paprasti siekiant parodyti, jog tyrimas veikia, pradinę būseną teoriškai įmanoma atspėti. Pasirinkus ilgesnį SALT ir ilgesnę įvestį pradinio teksto atspėti praktiškai neįmanoma.
 
-# Negrįžtamumo demonstracija hash_be_ai
-
-| hash + SALT               |    laikas, s | Bandymų sk. |
-|---------------------------|--------------|-------------|
-| **Be SALT/su žinomu SALT**|    7.15      |   37288     |
-| **Su nežinomu SALT**      |    300.59    |   1380556   |
-
-## Tyrimo sąlygos
-
-#### Originalus pasirinktas tekstas: "101".
-#### pasirinktas fiksuotas SALT'as: "ac".
-
-SALT'as bei įvestis pasirinkti ypač paprasti siekiant parodyti, jog tyrimas veikia, pradinę būseną teoriškai įmanoma atspėti. Pasirinkus ilgesnį SALT ir ilgesnę įvestį pradinio teksto atspėti praktiškai neįmanoma.
 
 # Negrįžtamumo demonstracija hash_be_ai
 
