@@ -329,7 +329,7 @@ Salt'as bei įvestis pasirinkti ypač paprasti siekiant parodyti, jog tyrimas ve
 | hash + salt               |    laikas, s | Bandymų sk. |
 |---------------------------|--------------|-------------|
 | **Be salt/su žinomu salt**|    7.15      |   37288     |
-| **Hex simboliai**         |    300.59    |   1380556   |
+| **Su nežinomu salt**      |    300.59    |   1380556   |
 
 ## Tyrimo sąlygos
 
@@ -343,7 +343,7 @@ Salt'as bei įvestis pasirinkti ypač paprasti siekiant parodyti, jog tyrimas ve
 | hash + salt               |    laikas, s | Bandymų sk. |
 |---------------------------|--------------|-------------|
 | **Be salt/su žinomu salt**|    0.24      |   37288     |
-| **Hex simboliai**         |    10.92     |   1380952   |
+| **Su nežinomu salt**      |    10.92     |   1380952   |
 
 ## Tyrimo sąlygos
 
