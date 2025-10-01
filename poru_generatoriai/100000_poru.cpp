@@ -35,7 +35,7 @@ int main() {
         for (int i = 0; i < pairs; i++) {
             string s1 = random_string(L, rng);
             string s2 = random_string(L, rng);
-            fout << s1 << " | " << s2 << "\n";
+            fout << s1 << " " << s2 << "\n";
         }
         fout << "\n";
     }
