@@ -60,7 +60,10 @@ def simplehash_bytes(data: bytes, rounds_per_block=3, final_rounds=16):
     return ''.join(f'{w:08x}' for w in state)
 
 def simplehash_string(s: str, print_output=True):
-    h = simplehash_bytes(s.encode('utf-8'))  # neperduodam kwargs
+    if isinstance(s, str):
+        h = simplehash_bytes(s.encode('utf-8'))  # neperduodam 
+    elif isinstance(s, bytes):
+        h = simplehash_bytes(s)
     if print_output:
         print(f"Hash'as: {h}")
     return h

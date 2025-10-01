@@ -1,4 +1,4 @@
-from hash_be_ai import hash_string as org_hash_string
+from hash_su_ai import simplehash_string as org_hash_string
 
 FIXED_SALT = bytes.fromhex("a1b2c3d4e5f60718293a4b5c6d7e8f90")
 
@@ -11,7 +11,7 @@ def hash_with_salt(data):
 
 def demonstrate_irreversibility():
     original = "SlaptasTekstas"
-    modified = original + "!" 
+    modified = "SlaptasTekstaa"
 
     hash_orig = hash_with_salt(original)
     hash_mod  = hash_with_salt(modified)

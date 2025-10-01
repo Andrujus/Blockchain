@@ -7,7 +7,8 @@ def hash_string(user_input):
     h2 = 0xfedcba0987654321
     h3 = 0xabcdef1234567890
     h4 = 0x0987654321fedcba
-    user_input = user_input.encode('utf-8')
+    if isinstance(user_input, str):
+        user_input = user_input.encode('utf-8')
     for b in user_input:
         h1 ^= b
         h1 = rotl64(h1, 13)
