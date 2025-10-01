@@ -356,7 +356,7 @@ SALT'as bei įvestis pasirinkti ypač paprasti siekiant parodyti, jog tyrimas ve
 
 Abi versijos yra vienodai vienodai atsparios tikrinimams, negrįžtamumas aiškiai parodytas. Pasirinkus ilgesnią/ sunkesnią SALT reikšmę rezultatai keistųsi eksponentiškai, pradinės reikšmės atstatyti būtų praktiškai neįmanoma.
 
-# Hash algoritmų tyrimas
+# Hash algoritmų tyrimo išvados
 
 Šiame projekte pateikiami du hash algoritmų variantai:
 

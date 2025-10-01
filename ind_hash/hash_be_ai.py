@@ -40,6 +40,7 @@ if __name__ == "__main__":
         if input_str == 'f':
             file = input("Iveskite failo pavadinima: ")
             hash_file(file)
+            print(f"Hash'as: {hash_file(file)}")
 
         elif input_str == 's':
             user_input = input("Iveskite teksta: ")
