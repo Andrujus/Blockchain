@@ -315,11 +315,43 @@ Hash funkcija `hash_be_ai.py` turi **stiprų lavinos efektą**. Vieno simbolio p
 | hash + salt               |    laikas, s | Bandymų sk. |
 |---------------------------|--------------|-------------|
 | **Be salt/su žinomu salt**|    7.15      |   37288     |
+| **Hex simboliai**         |    300.59    |   13800556  |
+
+## Tyrimo sąlygos
+
+#### Originalus pasirinktas tekstas: "101".
+#### pasirinktas fiksuotas salt'as: "ac".
+
+Salt'as bei įvestis pasirinkti ypač paprasti siekiant parodyti, jog tyrimas veikia, pradinę būseną teoriškai įmanoma atspėti. Pasirinkus ilgesnį salt ir ilgesnę įvestį pradinio teksto atspėti praktiškai neįmanoma.
+
+# Negrįžtamumo demonstracija hash_be_ai
+
+| hash + salt               |    laikas, s | Bandymų sk. |
+|---------------------------|--------------|-------------|
+| **Be salt/su žinomu salt**|    7.15      |   37288     |
 | **Hex simboliai**         |    300.59    |   1380556   |
 
 ## Tyrimo sąlygos
 
-### Originalus pasirinktas tekstas: "101".
-### pasirinktas fiksuotas salt'as: "ac".
+#### Originalus pasirinktas tekstas: "101".
+#### pasirinktas fiksuotas salt'as: "ac".
 
 Salt'as bei įvestis pasirinkti ypač paprasti siekiant parodyti, jog tyrimas veikia, pradinę būseną teoriškai įmanoma atspėti. Pasirinkus ilgesnį salt ir ilgesnę įvestį pradinio teksto atspėti praktiškai neįmanoma.
+
+# Negrįžtamumo demonstracija hash_be_ai
+
+| hash + salt               |    laikas, s | Bandymų sk. |
+|---------------------------|--------------|-------------|
+| **Be salt/su žinomu salt**|    0.24      |   37288     |
+| **Hex simboliai**         |    10.92     |   1380952   |
+
+## Tyrimo sąlygos
+
+#### Originalus pasirinktas tekstas: "101".
+#### pasirinktas fiksuotas salt'as: "ac".
+
+Salt'as bei įvestis pasirinkti ypač paprasti siekiant parodyti, jog tyrimas veikia, pradinę būseną teoriškai įmanoma atspėti. Pasirinkus ilgesnį salt ir ilgesnę įvestį pradinio teksto atspėti praktiškai neįmanoma. Versija, kurioje nenaudojami AI įrankiai matome, jog nors ir su nežinomu salt'u pradinė reikšmė randama panašiu metu, nes ir ten ir ten visi simboliai buvo tikrinami iš eilės.
+
+## IŠvados
+
+Abi versijos yra vienodai vienodai atsparios tikrinimams, negrįžtamumas aiškiai parodytas. Pasirinkus ilgesnią/ sunkesnią salt reikšmę rezultatai keistųsi eksponentiškai, pradinės reikšmės atstatyti būtų praktiškai neįmanoma.

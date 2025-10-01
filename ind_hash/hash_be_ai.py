@@ -25,7 +25,6 @@ def hash_string(user_input):
     rez3 = f"{h3:016x}"
     rez4 = f"{h4:016x}"
 
-    print(f"Hash'as: {rez1}{rez2}{rez3}{rez4}")
     return f"{rez1}{rez2}{rez3}{rez4}"
 
 def hash_file(file):
