@@ -2,7 +2,7 @@
 import random
 import string
 from pathlib import Path
-from hash_su_ai import simplehash_string  # tavo hash implementacija
+from hash_su_ai import simplehash_string 
 
 # --- Konfigūracija ---
 LENGTHS = [10, 100, 500, 1000]
