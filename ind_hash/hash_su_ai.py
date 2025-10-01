@@ -1,4 +1,4 @@
-# simplehash.py
+# hash_su_ai.py
 import struct
 import sys
 
@@ -59,9 +59,11 @@ def simplehash_bytes(data: bytes, rounds_per_block=3, final_rounds=16):
     # išvestis: 64 hex simboliai
     return ''.join(f'{w:08x}' for w in state)
 
-def simplehash_string(s: str, **kwargs):
-    return simplehash_bytes(s.encode('utf-8'), **kwargs)
-
+def simplehash_string(s: str, print_output=True):
+    h = simplehash_bytes(s.encode('utf-8'))  # neperduodam kwargs
+    if print_output:
+        print(f"Hash'as: {h}")
+    return h
 # --- Paleidimas ---
 if __name__ == "__main__":
     if len(sys.argv) > 1:

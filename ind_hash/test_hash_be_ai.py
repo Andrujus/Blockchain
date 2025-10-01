@@ -1,4 +1,3 @@
-# hash_su_ai.py
 
 def rotl64(x, r):
     """64 bitų rotacija į kairę."""
