@@ -105,7 +105,37 @@ Kiekvienam įvedimo dydžiui hash funkcija buvo paleista **5 kartus**, skaičiuo
 - Net ir su mažu kiekiu eilučių matomas laipsniškas didėjimas.  
 - Dvigubai padidinus įvestį, laikas išauga maždaug **2–3 kartus** (mažose imtyse kiek mažiau, didesnėse – daugiau).  
 - Grafike aiškiai matoma, kad algoritmas veikia **artimai linijinei priklausomybei**, todėl yra **skaliojamas**.  
-- Tai reiškia, kad didesniems failams laikas bus ilgesnis, bet prognozuojamas ir be „staigių šuolių“.  
+- Tai reiškia, kad didesniems failams laikas bus ilgesnis, bet prognozuojamas ir be „staigių šuolių“.
+
+
+# 5. Kolizijų paieškos testas
+
+### Užduotis
+Sugeneruotos po **100 000 atsitiktinių string porų** keturiems skirtingiems ilgiams:  
+- 10 simbolių  
+- 100 simbolių  
+- 500 simbolių  
+- 1000 simbolių  
+
+Kiekvienai porai buvo paskaičiuotas `hash_string` rezultatas ir patikrinta, ar nėra kolizijos (t. y. ar dvi skirtingos eilutės neduoda to paties hash’o).
+
+---
+
+### Rezultatai
+
+| Eilučių ilgis | Patikrinta porų | Kolizijų skaičius | Kolizijų dažnis |
+|---------------|-----------------|-------------------|-----------------|
+| 10            | 100 000         | 0                 | 0.000000%       |
+| 100           | 100 000         | 0                 | 0.000000%       |
+| 500           | 100 000         | 0                 | 0.000000%       |
+| 1000          | 100 000         | 0                 | 0.000000%       |
+
+---
+
+### Išvados
+- Atlikus testą su **400 000 porų** skirtingo ilgio string’ų, nė karto nepasitaikė kolizijos.  
+- Tai rodo, kad `hash_string` funkcija yra **pakankamai atspari kolizijoms** bent jau tokio dydžio duomenų aibėse.  
+- Tikėtina, kad kolizijų atsiradimas pareikalaus ženkliai didesnio testų masto (pvz., milijonų ar daugiau porų).  
 
 ------------------------------------------------------------------------------------------------
 
