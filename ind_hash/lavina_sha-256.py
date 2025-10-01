@@ -1,5 +1,5 @@
 # lavina_test_existing_files.py
-from hash_su_ai import simplehash_string
+import hashlib
 
 def bit_difference(h1, h2):
     return bin(int(h1, 16) ^ int(h2, 16)).count('1')
@@ -15,8 +15,8 @@ def run_avalanche_test(file_path):
     with open(file_path, "r", encoding="utf-8") as f:
         for line in f:
             s1, s2 = line.strip().split(maxsplit=1)
-            h1 = simplehash_string(s1, print_output=False)
-            h2 = simplehash_string(s2, print_output=False)
+            h1 = hashlib.sha256(s1.encode('utf-8')).hexdigest()
+            h2 = hashlib.sha256(s2.encode('utf-8')).hexdigest()
             
             bit_diff = bit_difference(h1, h2)
             hex_diff = hex_difference(h1, h2)
