@@ -316,3 +316,10 @@ Hash funkcija `hash_be_ai.py` turi **stiprų lavinos efektą**. Vieno simbolio p
 |---------------------------|--------------|-------------|
 | **Be salt/su žinomu salt**|    7.15      |   37288     |
 | **Hex simboliai**         |    300.59    |   1380556   |
+
+## Tyrimo sąlygos
+
+### Originalus pasirinktas tekstas: "101".
+### pasirinktas fiksuotas salt'as: "ac".
+
+Salt'as bei įvestis pasirinkti ypač paprasti siekiant parodyti, jog tyrimas veikia, pradinę būseną teoriškai įmanoma atspėti. Pasirinkus ilgesnį salt ir ilgesnę įvestį pradinio teksto atspėti praktiškai neįmanoma.
