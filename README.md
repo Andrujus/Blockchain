@@ -210,3 +210,43 @@ Kiekvienam įvedimo dydžiui hash funkcija buvo paleista **5 kartus**, skaičiuo
 - Algoritmas **žymiai greitesnis** nei ankstesnis `simplehash.py`.  
 - Laikas didėja apytiksliai **linijiškai**: dvigubai daugiau eilučių → ~2–3 karto ilgesnis laikas.  
 - Šis hash algoritmas yra **skaliojamas ir efektyvus** net didesniems failams, todėl tinkamas realiems testams.  
+
+# Kolizijų paieškos rezultatai
+
+## Testo eiga
+Buvo sugeneruota ir patikrinta po **100 000 atsitiktinių string porų** keturiems skirtingiems ilgiams: **10, 100, 500, 1000 simbolių**.  
+Kiekviename etape fiksuotas apdorotų porų skaičius bei rastos kolizijos.
+
+### Detalūs rezultatai
+- **pairs_len10.txt**  
+  - Apdorota: 100 000 porų  
+  - Kolizijų: 0  
+
+- **pairs_len100.txt**  
+  - Apdorota: 100 000 porų  
+  - Kolizijų: 0  
+
+- **pairs_len500.txt**  
+  - Apdorota: 100 000 porų  
+  - Kolizijų: 0  
+
+- **pairs_len1000.txt**  
+  - Apdorota: 100 000 porų  
+  - Kolizijų: 0  
+
+---
+
+## Galutiniai rezultatai
+| String ilgis | Porų skaičius | Kolizijų skaičius | Kolizijų dažnis |
+|--------------|---------------|-------------------|-----------------|
+| 10           | 100 000       | 0                 | 0.000000%       |
+| 100          | 100 000       | 0                 | 0.000000%       |
+| 500          | 100 000       | 0                 | 0.000000%       |
+| 1000         | 100 000       | 0                 | 0.000000%       |
+
+---
+
+## Išvada
+Visuose keturiuose testuose neaptikta nė vienos kolizijos.  
+Tai atitinka teorinę tikimybę, kad 256 bitų hash erdvėje, naudojant vos 100 tūkst. bandymų, kolizijų tikimybė yra praktiškai lygi nuliui.
+
