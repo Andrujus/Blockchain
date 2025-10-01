@@ -397,3 +397,18 @@ Tyrimo tikslas – patikrinti, ar šie algoritmai atitinka pagrindinius hash fun
 ## Galutinės išvados
 
 Abu algoritmai atitinka pagrindinius hash funkcijų kriterijus. Abiejuose hash'ų generatoriuose būtų vertinga iškart naudoti SALT reikšmes, hash_be_ai versijoje trūksta pilnos bit'ų rotacijos, didesnių maišymų, geresnio lavinos efekto realizavimo (vienu simboliu besikeičiančios reikšmės palieka labai panašią pirmųjų ~29 simbolių reikšmę 64-ių simbolių rezultate).
+
+
+# Hash algoritmų palyginimas
+
+| Testas | hash_su_ai | hash_be_ai | sha256 |
+|--------|------------|-------------|--------|
+| **1. Testiniai failai** | a.txt, empty.txt, 1000+ simbolių failai, skirtingi vienu simboliu – rezultatai gauti | a.txt, empty.txt, 1000+ simbolių failai, skirtingi vienu simboliu – rezultatai gauti | failai, skirtingi vienu simboliu – rezultatai gauti |
+| **2. Rezultato dydis** | 64 hex simboliai (256 bitai) | 64 hex simboliai (256 bitai) | 64 hex simboliai (256 bitai) |
+| **3. Deterministiškumas** | Tas pats failas → tas pats hash | Tas pats failas → tas pats hash | Tas pats failas → tas pats hash |
+| **4. Efektyvumas (konstitucija.txt)** | Laikas ~ linijinis, pvz. 512 eilučių → ~0.134 s | Laikas ~ linijinis, pvz. 512 eilučių → ~0.039 s | Laikas ~ linijinis, pvz. 512 eilučių → ~0.000021 s |
+| **5. Kolizijų paieška (100k porų)** | 0 kolizijų (10, 100, 500, 1000 simbolių) | 0 kolizijų (10, 100, 500, 1000 simbolių) | 0 kolizijų (10, 100, 500, 1000 simbolių) |
+| **6. Lavinos efektas (100k porų, skiriasi vienu simboliu)** | Bitai: min=0, max=163, avg≈128  Hex: min=0, max=64, avg≈60 | Bitai: min=17, max=163, avg≈121  Hex: min=12, max=64, avg≈57 | Bits -> min: 95, max: 159, avg: 127.98
+Hex  -> min: 50, max: 64, avg: 60.00 |
+| **7. Negrįžtamumas (HASH + SALT)** | Bandant atspėti su žinomu SALT → 7.15s, su nežinomu → 300s+ | Bandant atspėti su žinomu SALT → 0.24s, su nežinomu → 10.9s | Bandant atspėti su žinomu SALT → 0.05s, su nežinomu → 2.03s |
+
