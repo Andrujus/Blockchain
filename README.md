@@ -137,6 +137,37 @@ Kiekvienai porai buvo paskaičiuotas `hash_string` rezultatas ir patikrinta, ar 
 - Tai rodo, kad `hash_string` funkcija yra **pakankamai atspari kolizijoms** bent jau tokio dydžio duomenų aibėse.  
 - Tikėtina, kad kolizijų atsiradimas pareikalaus ženkliai didesnio testų masto (pvz., milijonų ar daugiau porų).  
 
+# Lavinos efektas (Avalanche Effect) – hash_su_ai
+
+**Failas:** `avalanche_pairs/avalanche_len50_pairs100000.txt`  
+**Porų skaičius:** 100 000 porų  
+**Kiekvienos poros ilgis:** 50 simbolių (skiriasi tik vienu simboliu)
+
+## Rezultatai
+
+| Lygmuo       | Min  | Max  | Vidurkis |
+|--------------|------|------|----------|
+| **Bitai**    | 0    | 163  | 127.91   |
+| **Hex simboliai** | 0    | 64   | 59.95    |
+
+## Interpretacija
+
+- **Bitų lygmuo:**  
+  - `min = 0` – egzistuoja porų, kurių hash visiškai nesiskyrė.  
+  - `max = 163` – daugiausiai skirtingų bitų poroje.  
+  - `avg ≈ 128` – vidutiniškai apie pusė hash bitų pasikeitė, kas rodo gerą lavinos efektą.
+ 
+- **Hex simbolių lygmuo:**  
+  - `min = 0` – poros, kurių hex hash buvo identiški.  
+  - `max = 64` – maksimaliai pasikeitė visi hex simboliai.  
+  - `avg ≈ 60` – vidutiniškai pasikeitė dauguma simbolių.
+
+## Išvada
+
+Hash funkcija `hash_su_ai.py` turi **stiprų lavinos efektą**. Vieno simbolio pakeitimas įvestyje keičia vidutiniškai apie pusę bitų ir daugumą hex simbolių hash’e. Tai geras ženklas kriptografiniam saugumui – apsunkina prognozuoti hash reikšmes ir rasti kolizijas.
+
+
+
 ------------------------------------------------------------------------------------------------
 
 # hash_be_ai
