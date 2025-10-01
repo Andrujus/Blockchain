@@ -312,46 +312,101 @@ Hash funkcija `hash_be_ai.py` turi **stiprų lavinos efektą**. Vieno simbolio p
 
 # Negrįžtamumo demonstracija hash_su_ai
 
-| hash + salt               |    laikas, s | Bandymų sk. |
+| hash + SALT               |    laikas, s | Bandymų sk. |
 |---------------------------|--------------|-------------|
-| **Be salt/su žinomu salt**|    7.15      |   37288     |
+| **Be SALT/su žinomu SALT**|    7.15      |   37288     |
 | **Hex simboliai**         |    300.59    |   13800556  |
 
 ## Tyrimo sąlygos
 
 #### Originalus pasirinktas tekstas: "101".
-#### pasirinktas fiksuotas salt'as: "ac".
+#### pasirinktas fiksuotas SALT'as: "ac".
 
-Salt'as bei įvestis pasirinkti ypač paprasti siekiant parodyti, jog tyrimas veikia, pradinę būseną teoriškai įmanoma atspėti. Pasirinkus ilgesnį salt ir ilgesnę įvestį pradinio teksto atspėti praktiškai neįmanoma.
+SALT'as bei įvestis pasirinkti ypač paprasti siekiant parodyti, jog tyrimas veikia, pradinę būseną teoriškai įmanoma atspėti. Pasirinkus ilgesnį SALT ir ilgesnę įvestį pradinio teksto atspėti praktiškai neįmanoma.
 
 # Negrįžtamumo demonstracija hash_be_ai
 
-| hash + salt               |    laikas, s | Bandymų sk. |
+| hash + SALT               |    laikas, s | Bandymų sk. |
 |---------------------------|--------------|-------------|
-| **Be salt/su žinomu salt**|    7.15      |   37288     |
-| **Su nežinomu salt**      |    300.59    |   1380556   |
+| **Be SALT/su žinomu SALT**|    7.15      |   37288     |
+| **Su nežinomu SALT**      |    300.59    |   1380556   |
 
 ## Tyrimo sąlygos
 
 #### Originalus pasirinktas tekstas: "101".
-#### pasirinktas fiksuotas salt'as: "ac".
+#### pasirinktas fiksuotas SALT'as: "ac".
 
-Salt'as bei įvestis pasirinkti ypač paprasti siekiant parodyti, jog tyrimas veikia, pradinę būseną teoriškai įmanoma atspėti. Pasirinkus ilgesnį salt ir ilgesnę įvestį pradinio teksto atspėti praktiškai neįmanoma.
+SALT'as bei įvestis pasirinkti ypač paprasti siekiant parodyti, jog tyrimas veikia, pradinę būseną teoriškai įmanoma atspėti. Pasirinkus ilgesnį SALT ir ilgesnę įvestį pradinio teksto atspėti praktiškai neįmanoma.
 
 # Negrįžtamumo demonstracija hash_be_ai
 
-| hash + salt               |    laikas, s | Bandymų sk. |
+| hash + SALT               |    laikas, s | Bandymų sk. |
 |---------------------------|--------------|-------------|
-| **Be salt/su žinomu salt**|    0.24      |   37288     |
-| **Su nežinomu salt**      |    10.92     |   1380952   |
+| **Be SALT/su žinomu SALT**|    0.24      |   37288     |
+| **Su nežinomu SALT**      |    10.92     |   1380952   |
 
 ## Tyrimo sąlygos
 
 #### Originalus pasirinktas tekstas: "101".
-#### pasirinktas fiksuotas salt'as: "ac".
+#### pasirinktas fiksuotas SALT'as: "ac".
 
-Salt'as bei įvestis pasirinkti ypač paprasti siekiant parodyti, jog tyrimas veikia, pradinę būseną teoriškai įmanoma atspėti. Pasirinkus ilgesnį salt ir ilgesnę įvestį pradinio teksto atspėti praktiškai neįmanoma. Versija, kurioje nenaudojami AI įrankiai matome, jog nors ir su nežinomu salt'u pradinė reikšmė randama panašiu metu, nes ir ten ir ten visi simboliai buvo tikrinami iš eilės.
+SALT'as bei įvestis pasirinkti ypač paprasti siekiant parodyti, jog tyrimas veikia, pradinę būseną teoriškai įmanoma atspėti. Pasirinkus ilgesnį SALT ir ilgesnę įvestį pradinio teksto atspėti praktiškai neįmanoma. Versija, kurioje nenaudojami AI įrankiai matome, jog nors ir su nežinomu SALT'u pradinė reikšmė randama panašiu metu, nes ir ten ir ten visi simboliai buvo tikrinami iš eilės.
 
 ## IŠvados
 
-Abi versijos yra vienodai vienodai atsparios tikrinimams, negrįžtamumas aiškiai parodytas. Pasirinkus ilgesnią/ sunkesnią salt reikšmę rezultatai keistųsi eksponentiškai, pradinės reikšmės atstatyti būtų praktiškai neįmanoma.
+Abi versijos yra vienodai vienodai atsparios tikrinimams, negrįžtamumas aiškiai parodytas. Pasirinkus ilgesnią/ sunkesnią SALT reikšmę rezultatai keistųsi eksponentiškai, pradinės reikšmės atstatyti būtų praktiškai neįmanoma.
+
+# Hash algoritmų tyrimas
+
+Šiame projekte pateikiami du hash algoritmų variantai:
+
+- `hash_su_ai` – sukurtas naudojant AI pagalbą
+- `hash_be_ai` – sukurtas be AI pagalbos, pasinaudota pagalba iš Igno (AI pagalbą naudojančio asmens)
+
+Tyrimo tikslas – patikrinti, ar šie algoritmai atitinka pagrindinius hash funkcijų reikalavimus: pastovaus dydžio rezultatas, deterministiškumas, lavinos efektas, atsparumas kolizijoms, efektyvumas ir negrįžtamumas.
+
+---
+
+## Pagrindinės savybės
+
+- Rezultatas: visada 64 simbolių (256 bitų) hex eilutė
+- Deterministiškumas: tas pats įvedimas visada duoda tą patį hash
+- Lavinos efektas: vieno simbolio pakeitimas įvestyje pakeičia apie pusę hash bitų
+- Kolizijos: atlikus 400 000 testų porų, kolizijų neaptikta
+- Efektyvumas: hashavimo laikas auga artimai linijinei priklausomybei didėjant duomenų kiekiui
+- Negrįžtamumas: hash reikšmės atstatyti praktiškai neįmanoma
+
+---
+
+## Eksperimentiniai rezultatai
+
+### Rezultato dydis
+- Abiejų algoritmų hash ilgis visada 64 simboliai.
+
+### Deterministiškumas
+- Tas pats failas visada grąžina tą patį hash.
+
+### Lavinos efektas
+
+| Algoritmas   | Vidutinis skirtingų bitų skaičius | Vidutinis skirtingų hex simbolių skaičius |
+|--------------|-----------------------------------|-------------------------------------------|
+| hash_su_ai   | ~128 iš 256                       | ~60 iš 64                                  |
+| hash_be_ai   | ~121 iš 256                       | ~57 iš 64                                  |
+
+### Kolizijos
+- Patikrinta 400 000 skirtingų string porų
+- Kolizijų neaptikta
+
+### Efektyvumas
+- Hashavimo laikas abiejuose algoritmuose auga beveik linijiškai
+- `hash_be_ai` yra šiek tiek greitesnis
+
+### Negrįžtamumas
+- Net ir su paprastu SALT atstatymas užtrunka labai ilgai
+- Su sudėtingesniu SALT pradinę reikšmę atspėti tampa praktiškai neįmanoma
+
+---
+
+## Galutinės išvados
+
+Abu algoritmai atitinka pagrindinius hash funkcijų kriterijus. Abiejuose hash'ų generatoriuose būtų vertinga iškart naudoti SALT reikšmes, hash_be_ai versijoje trūksta pilnos bit'ų rotacijos, didesnių maišymų, geresnio lavinos efekto realizavimo (vienu simboliu besikeičiančios reikšmės palieka labai panašią pirmųjų ~29 simbolių reikšmę 64-ių simbolių rezultate).

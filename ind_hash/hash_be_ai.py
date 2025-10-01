@@ -44,6 +44,7 @@ if __name__ == "__main__":
         elif input_str == 's':
             user_input = input("Iveskite teksta: ")
             hash_string(user_input)
+            print(f"Hash'as: {hash_string(user_input)}")
         else:
             print("Neteisinga ivestis")
             loop = False
