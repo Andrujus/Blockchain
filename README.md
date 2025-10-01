@@ -281,3 +281,33 @@ Kiekviename etape fiksuotas apdorotų porų skaičius bei rastos kolizijos.
 Visuose keturiuose testuose neaptikta nė vienos kolizijos.  
 Tai atitinka teorinę tikimybę, kad 256 bitų hash erdvėje, naudojant vos 100 tūkst. bandymų, kolizijų tikimybė yra praktiškai lygi nuliui.
 
+# Lavinos efektas (Avalanche Effect) – hash_be_ai
+
+**Failas:** `avalanche_pairs/avalanche_len50_pairs100000.txt`  
+**Porų skaičius:** 100 000 porų  
+**Kiekvienos poros ilgis:** 50 simbolių (skiriasi tik vienu simboliu)
+
+## Rezultatai
+
+| Lygmuo           | Min  | Max  | Vidurkis |
+|------------------|------|------|----------|
+| **Bitai**        | 17   | 163  | 120.85   |
+| **Hex simboliai** | 12   | 64   | 56.71    |
+
+## Interpretacija
+
+- **Bitų lygmuo:**  
+  - `min = 17` – mažiausias bitų skirtumas poroje, nėra visiškai identiškų hash’ų.  
+  - `max = 163` – daugiausiai skirtingų bitų poroje.  
+  - `avg ≈ 121` – vidutiniškai apie pusė hash bitų pasikeitė, kas rodo gerą lavinos efektą.
+ 
+- **Hex simbolių lygmuo:**  
+  - `min = 12` – mažiausiai pasikeitusių hex simbolių poroje.  
+  - `max = 64` – maksimaliai pasikeitė visi hex simboliai.  
+  - `avg ≈ 57` – vidutiniškai pasikeitė dauguma simbolių.
+
+## Išvada
+
+Hash funkcija `hash_be_ai.py` turi **stiprų lavinos efektą**. Vieno simbolio pakeitimas įvestyje keičia vidutiniškai apie pusę bitų ir daugumą hex simbolių hash’e. Tai geras ženklas kriptografiniam saugumui – apsunkina prognozuoti hash reikšmes ir rasti kolizijas.
+
+
