@@ -310,4 +310,9 @@ Tai atitinka teorinę tikimybę, kad 256 bitų hash erdvėje, naudojant vos 100 
 
 Hash funkcija `hash_be_ai.py` turi **stiprų lavinos efektą**. Vieno simbolio pakeitimas įvestyje keičia vidutiniškai apie pusę bitų ir daugumą hex simbolių hash’e. Tai geras ženklas kriptografiniam saugumui – apsunkina prognozuoti hash reikšmes ir rasti kolizijas.
 
+# Negrįžtamumo demonstracija hash_su_ai
 
+| hash + salt               |    laikas, s | Bandymų sk. |
+|---------------------------|--------------|-------------|
+| **Be salt/su žinomu salt**|    7.15      |   37288     |
+| **Hex simboliai**         |    300.59    |   1380556   |
