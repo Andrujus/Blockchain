@@ -315,7 +315,7 @@ Hash funkcija `hash_be_ai.py` turi **stiprų lavinos efektą**. Vieno simbolio p
 | hash + SALT               |    laikas, s | Bandymų sk. |
 |---------------------------|--------------|-------------|
 | **Be SALT/su žinomu SALT**|    7.15      |   37288     |
-| **Hex simboliai**         |    300.59    |   13800556  |
+| **Hex simboliai**         |    300.59    |   1380556  |
 
 ## Tyrimo sąlygos
 
