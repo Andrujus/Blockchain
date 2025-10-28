@@ -2,7 +2,7 @@ import random
 import hashlib
 import string
 
-from classes import Transaction, User
+from classes import Transaction, User, block
 
 NUM_USERS = 1000
 NUM_TRANSACTIONS = 10_000
@@ -54,6 +54,18 @@ def generate_transactions(users, count: int):
     return txs
 
 
+def pick_random_transactions(txs: list, k: int = 100) -> list:
+    if k > len(txs):
+        raise ValueError(f"Requested {k} transactions, but only {len(txs)} available")
+    return random.sample(txs, k)
+
+
+def form_new_block(txs: list, k: int = 100) -> block:
+    selected = pick_random_transactions(txs, k)
+    return block(selected)
+
+
+
 def main():
     print(f"Generating {NUM_USERS} users...")
     users = make_users(NUM_USERS)
@@ -62,6 +74,13 @@ def main():
     print(f"Generated {len(txs)} transactions")
     print("Example 3 transactions:")
     for t in txs[:3]:
+        print(f"{t.txid[:10]}... {t.amount} from {t.sender[:8]} -> {t.receiver[:8]}")
+
+    print("Selecting 100 random transactions for a new block...")
+    new_blk = form_new_block(txs, 100)
+    print(f"New block prepared with {len(new_blk.transactions)} transactions")
+    print("First 5 tx in the block:")
+    for t in new_blk.transactions[:5]:
         print(f"{t.txid[:10]}... {t.amount} from {t.sender[:8]} -> {t.receiver[:8]}")
 
 
