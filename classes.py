@@ -5,11 +5,12 @@ class User:
         self.balance = balance
 
 class Transaction:
-    def __init__(self, sender: User, receiver: User, amount: int, timestamp: str = None):
+    def __init__(self, sender: User, receiver: User, amount: int, txid: str):
         self.sender = sender
         self.receiver = receiver
         self.amount = amount
-        self.timestamp = timestamp
+        self.txid = txid
+
 
 class block:
     def __init__(self, transactions: list):

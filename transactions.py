@@ -1,10 +1,3 @@
-"""
-Transaction generavimo modulis
-==============================
-
-Failas: transaction.py
-Paskirtis: sugeneruoti Transaction objektus naudojant classes.py esančias klases.
-"""
 import random
 import time
 import hashlib
@@ -41,7 +34,9 @@ def generate_transactions(users, count: int):
         while receiver == sender:
             receiver = random.choice(user_keys)
         amount = random.randint(MIN_AMOUNT, MAX_AMOUNT)
-        tx = Transaction(sender, receiver, amount)
+        raw = f"{sender}|{receiver}|{amount}"
+        txid = sha256_hex(raw)
+        tx = Transaction(sender, receiver, amount, txid)
         txs.append(tx)
     return txs
 
@@ -54,7 +49,7 @@ def main():
     print(f"Generated {len(txs)} transactions")
     print("Example 3 transactions:")
     for t in txs[:3]:
-        print(f"{t.amount} from {t.sender[:8]} -> {t.receiver[:8]}")
+        print(f"{t.txid[:10]}... {t.amount} from {t.sender} -> {t.receiver}")
 
 
 if __name__ == "__main__":
