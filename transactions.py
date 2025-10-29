@@ -1,8 +1,12 @@
+"""
+Transactions ir blokų formavimas
+================================
+Failas: transactions.py
+"""
 import random
-import hashlib
 import string
 
-from classes import Transaction, User, block
+from classes import Transaction, User, block, hash_string, header
 
 NUM_USERS = 1000
 NUM_TRANSACTIONS = 10_000
@@ -15,17 +19,13 @@ MAX_AMOUNT = 10_000
 random.seed(RANDOM_SEED)
 
 
-def sha256_hex(s: str) -> str:
-    return hashlib.sha256(s.encode("utf-8")).hexdigest()
-
-
 def random_name(length: int = 8) -> str:
     return ''.join(random.choices(string.ascii_lowercase, k=length))
 
 
 def random_pubkey() -> str:
     raw = ''.join(random.choices(string.ascii_letters + string.digits, k=24))
-    return sha256_hex(raw)
+    return hash_string(raw)
 
 
 def make_users(n: int):
@@ -47,8 +47,8 @@ def generate_transactions(users, count: int):
         while receiver == sender:
             receiver = random.choice(user_keys)
         amount = random.randint(MIN_AMOUNT, MAX_AMOUNT)
-        raw = f"{sender}|{receiver}|{amount}"
-        txid = sha256_hex(raw)
+        raw = f"{sender}|{receiver}|{amount}" 
+        txid = hash_string(raw)
         tx = Transaction(sender, receiver, amount, txid)
         txs.append(tx)
     return txs
@@ -60,9 +60,14 @@ def pick_random_transactions(txs: list, k: int = 100) -> list:
     return random.sample(txs, k)
 
 
-def form_new_block(txs: list, k: int = 100) -> block:
+def form_new_block(prev_hash: str, txs: list, k: int = 100) -> block:
     selected = pick_random_transactions(txs, k)
-    return block(selected)
+    all_txids = "".join(tx.txid for tx in selected)
+    transactions_hash = hash_string(all_txids)
+    h = header(prev_hash, "v0.1", transactions_hash, 0)
+    block_hash = hash_string(h.serialize())
+
+    return block(selected, block_hash)
 
 
 
@@ -77,7 +82,7 @@ def main():
         print(f"{t.txid[:10]}... {t.amount} from {t.sender[:8]} -> {t.receiver[:8]}")
 
     print("Selecting 100 random transactions for a new block...")
-    new_blk = form_new_block(txs, 100)
+    new_blk = form_new_block("0"*64, txs, 100)
     print(f"New block prepared with {len(new_blk.transactions)} transactions")
     print("First 5 tx in the block:")
     for t in new_blk.transactions[:5]:
