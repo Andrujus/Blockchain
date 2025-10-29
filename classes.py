@@ -24,7 +24,6 @@ def hash_string(user_input):
     rez2 = f"{h2:016x}"
     rez3 = f"{h3:016x}"
     rez4 = f"{h4:016x}"
-
     return f"{rez1}{rez2}{rez3}{rez4}"
 
 class User:
@@ -34,19 +33,14 @@ class User:
         self.balance = balance
 
 class Transaction:
-    def __init__(self, sender: User, receiver: User, amount: int, txid: str):
+    def __init__(self, sender: str, receiver: str, amount: int):
         self.sender = sender
         self.receiver = receiver
         self.amount = amount
-        self.txid = txid
+        raw = f"{sender}|{receiver}|{amount}"
+        self.txid = hash_string(raw)
 
-
-class block:
-    def __init__(self, transactions: list, block_hash: str):
-        self.transactions = transactions
-        self.block_hash = block_hash
-
-class header:
+class Header:
     def __init__(self, prev_block_hash: str, version: str, transactions_hash: str, nonce: int):
         self.prev_block_hash = prev_block_hash
         self.version = version
@@ -55,3 +49,9 @@ class header:
 
     def serialize(self) -> str:
         return f"{self.prev_block_hash}|{self.version}|{self.transactions_hash}|{self.nonce}"
+
+class Block:
+    def __init__(self, header: Header, transactions: list, block_hash: str):
+        self.header = header
+        self.transactions = transactions
+        self.block_hash = block_hash

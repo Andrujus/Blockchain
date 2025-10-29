@@ -1,12 +1,7 @@
-"""
-Transactions ir blokų formavimas
-================================
-Failas: transactions.py
-"""
 import random
 import string
 
-from classes import Transaction, User, block, hash_string, header
+from classes import Transaction, User, Block, Header, hash_string
 
 NUM_USERS = 1000
 NUM_TRANSACTIONS = 10_000
@@ -47,9 +42,7 @@ def generate_transactions(users, count: int):
         while receiver == sender:
             receiver = random.choice(user_keys)
         amount = random.randint(MIN_AMOUNT, MAX_AMOUNT)
-        raw = f"{sender}|{receiver}|{amount}" 
-        txid = hash_string(raw)
-        tx = Transaction(sender, receiver, amount, txid)
+        tx = Transaction(sender, receiver, amount)  # Transaction pats sugeneruos txid
         txs.append(tx)
     return txs
 
@@ -60,15 +53,19 @@ def pick_random_transactions(txs: list, k: int = 100) -> list:
     return random.sample(txs, k)
 
 
-def form_new_block(prev_hash: str, txs: list, k: int = 100) -> block:
+def form_new_block(prev_hash: str, txs: list, k: int = 100) -> Block:
     selected = pick_random_transactions(txs, k)
     all_txids = "".join(tx.txid for tx in selected)
     transactions_hash = hash_string(all_txids)
-    h = header(prev_hash, "v0.1", transactions_hash, 0)
-    block_hash = hash_string(h.serialize())
 
-    return block(selected, block_hash)
-
+    header = Header(
+        prev_block_hash=prev_hash,
+        version="v0.1",
+        transactions_hash=transactions_hash,
+        nonce=0,
+    )
+    block_hash = hash_string(header.serialize())
+    return Block(header, selected, block_hash)
 
 
 def main():
