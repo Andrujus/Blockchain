@@ -13,22 +13,31 @@
 1. **Vartotojai**  
    Sukuriama 1000 vartotojų su atsitiktiniais vardais, viešais raktais ir pradiniais balansais.
    Išsaugoma į `users.json`.
+   <img width="1137" height="692" alt="image" src="https://github.com/user-attachments/assets/a00f6bf2-5144-4302-86ed-d91f7e03d89c" />
+
 
 2. **Transakcijos**  
    Sugeneruojama 10 000 atsitiktinių transakcijų tarp vartotojų.  
    Išsaugoma į `transactions.json`.
+   <img width="1115" height="615" alt="image" src="https://github.com/user-attachments/assets/d2428820-35dc-4a54-a92f-7e26f09a61dc" />
 
-3. **Bloko formavimas**  
+
+4. **Bloko formavimas**  
    Atsitiktinai parenkama 100 transakcijų, jos supakuojamos į bloką.  
    Sukuriamas `Header`, sugeneruojamas bloko hash.
+   <img width="1186" height="176" alt="image" src="https://github.com/user-attachments/assets/e5b72b05-790b-42bd-aa8b-ef7706532ba4" />
 
-4. **Kasimas (Proof-of-Work)**  
+5. **Kasimas (Proof-of-Work)**  
    Blokas kasamas tol, kol hash prasideda nulių seka pagal `difficulty` (pvz., `"000"`).
+   <img width="1235" height="622" alt="image" src="https://github.com/user-attachments/assets/85122116-35fb-43ec-b39f-6ad6f0d4e294" />
 
-5. **Patvirtinimas**  
+
+6. **Patvirtinimas**  
    - Įtrauktos transakcijos pašalinamos iš `transactions.json`.
    - Atnaujinami vartotojų balansai faile `users.json`.
    - Naujas blokas įtraukiamas į `blockchain.json`.
+   <img width="1192" height="554" alt="image" src="https://github.com/user-attachments/assets/fae21703-5e64-45e1-86a5-49f5db2a0222" />
+
 
 ## Naudojimas
 
