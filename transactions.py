@@ -1,41 +1,29 @@
-import random
+"""
+Blokų formavimas + kasimas + blockchain kūrimas
+==============================================
+Failas: transactions.py
+"""
 import json
-from pathlib import Path
+import random
 import time
+from pathlib import Path
 
-from classes import Transaction, User, Block, Header, hash_string
-from users import make_users, save_users
+from classes import Transaction, Block, Header, hash_string
 
-NUM_USERS = 1000
-NUM_TRANSACTIONS = 10_000
-RANDOM_SEED = 42
-MIN_AMOUNT = 1
-MAX_AMOUNT = 10_000
 TX_FILE = "transactions.json"
 BLOCK_FILE = "blocks.json"
-USERS_FILE = "users.json"
+BLOCKCHAIN_FILE = "blockchain.json"
+RANDOM_SEED = 42
 
 random.seed(RANDOM_SEED)
 
 
-def generate_transactions(users, count: int):
-    txs = []
-    user_keys = [u.public_key for u in users]
-    for _ in range(count):
-        sender = random.choice(user_keys)
-        receiver = random.choice(user_keys)
-        while receiver == sender:
-            receiver = random.choice(user_keys)
-        amount = random.randint(MIN_AMOUNT, MAX_AMOUNT)
-        tx = Transaction(sender, receiver, amount)
-        txs.append(tx)
-    return txs
-
-
-def save_transactions(txs, path: str):
-    Path(path).parent.mkdir(parents=True, exist_ok=True)
-    with open(path, "w", encoding="utf-8") as f:
-        json.dump([t.__dict__ for t in txs], f, indent=2, ensure_ascii=False)
+# ================== Pagalbinės funkcijos ==================
+def load_transactions(path: str):
+    """Užkrauna transakcijas iš JSON failo į Transaction objektus"""
+    with open(path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    return [Transaction(t["sender"], t["receiver"], t["amount"]) for t in data]
 
 
 def pick_random_transactions(txs: list, k: int = 100) -> list:
@@ -81,27 +69,35 @@ def save_blocks(blocks: list, path: str):
         json.dump([block_to_dict(b) for b in blocks], f, indent=2, ensure_ascii=False)
 
 
+def save_blockchain(blocks: list, path: str):
+    """Išsaugo pilną blockchain (blokų grandinę) į JSON"""
+    save_blocks(blocks, path)
+
+
+def build_blockchain(txs, n_blocks: int = 3, k: int = 100, difficulty: str = "000"):
+    """Iškasa kelis blokus ir suformuoja grandinę"""
+    blockchain = []
+    prev_hash = "0" * 64
+
+    for i in range(n_blocks):
+        print(f"Mining block {i+1}/{n_blocks}...")
+        start = time.time()
+        blk = mine_block(prev_hash, txs, k=k, difficulty=difficulty)
+        end = time.time()
+        blockchain.append(blk)
+        prev_hash = blk.block_hash
+        print(f" Block {i+1} mined in {end-start:.2f} sec. Hash={blk.block_hash[:12]}...")
+    
+    return blockchain
+
 def main():
-    print(f"Generating {NUM_USERS} users...")
-    users = make_users(NUM_USERS)
-    save_users(users, USERS_FILE)
+    print(f"Loading transactions from {TX_FILE}...")
+    txs = load_transactions(TX_FILE)
+    print(f"Loaded {len(txs)} transactions")
 
-    print(f"Generating {NUM_TRANSACTIONS} transactions...")
-    txs = generate_transactions(users, NUM_TRANSACTIONS)
-    save_transactions(txs, TX_FILE)
-    print(f"Saved {len(txs)} transactions -> {TX_FILE}")
-
-    print("Mining new block with 100 random transactions...")
-    start = time.time()
-    new_blk = mine_block("0"*64, txs, 100, difficulty="000")
-    end = time.time()
-    save_blocks([new_blk], BLOCK_FILE)
-    print(f"Block mined! Hash={new_blk.block_hash[:12]}... in {end-start:.2f} sec")
-    print(f"Saved block -> {BLOCK_FILE}")
-
-    print("First 3 transactions in block:")
-    for t in new_blk.transactions[:3]:
-        print(f"{t.txid[:10]}... {t.amount} from {t.sender[:8]} -> {t.receiver[:8]}")
+    blockchain = build_blockchain(txs, n_blocks=3, k=100, difficulty="000")
+    save_blockchain(blockchain, BLOCKCHAIN_FILE)
+    print(f"Blockchain saved -> {BLOCKCHAIN_FILE}")
 
 
 if __name__ == "__main__":
