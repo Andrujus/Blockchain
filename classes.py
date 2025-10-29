@@ -66,10 +66,6 @@ class Header:
         self.timestamp = int(time.time())
 
     def serialize(self) -> str:
-        """
-        Gražina string'ą, kuris bus hashuojamas.
-        Difficulty neįtraukiamas, nes jis naudojamas tik tikrinimui.
-        """
         return f"{self.prev_block_hash}|{self.version}|{self.transactions_hash}|{self.nonce}|{self.timestamp}"
 
 
