@@ -1,8 +1,3 @@
-"""
-Transactions ir blokų formavimas + kasimas
-==========================================
-Failas: transactions.py
-"""
 import random
 import json
 from pathlib import Path
@@ -59,7 +54,6 @@ def mine_block(prev_hash: str, txs: list, k: int = 100, difficulty: str = "000")
 
     nonce = 0
     while True:
-        # Difficulty saugomas tik header'e kaip info, bet nenaudojamas hash'e
         header = Header(
             prev_block_hash=prev_hash,
             version="v0.1",
@@ -67,10 +61,8 @@ def mine_block(prev_hash: str, txs: list, k: int = 100, difficulty: str = "000")
             nonce=nonce,
             difficulty=difficulty
         )
-        # Hashuojam tik serialize (be difficulty)
         block_hash = hash_string(header.serialize())
         if block_hash.startswith(difficulty):
-            # Radom tinkamą hash
             return Block(header, selected, block_hash)
         nonce += 1
 
