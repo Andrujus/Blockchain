@@ -1,11 +1,12 @@
 """
-Transactions ir blokų formavimas
-================================
+Transactions ir blokų formavimas + kasimas
+==========================================
 Failas: transactions.py
 """
 import random
 import json
 from pathlib import Path
+import time
 
 from classes import Transaction, User, Block, Header, hash_string
 from users import make_users, save_users
@@ -48,20 +49,30 @@ def pick_random_transactions(txs: list, k: int = 100) -> list:
     return random.sample(txs, k)
 
 
-def form_new_block(prev_hash: str, txs: list, k: int = 100) -> Block:
+def mine_block(prev_hash: str, txs: list, k: int = 100, difficulty: str = "000") -> Block:
+    """
+    Formuoja ir kasa naują bloką (Proof-of-Work).
+    """
     selected = pick_random_transactions(txs, k)
     all_txids = "".join(tx.txid for tx in selected)
     transactions_hash = hash_string(all_txids)
 
-    header = Header(
-        prev_block_hash=prev_hash,
-        version="v0.1",
-        transactions_hash=transactions_hash,
-        nonce=0,
-        difficulty="000"
-    )
-    block_hash = hash_string(header.serialize())
-    return Block(header, selected, block_hash)
+    nonce = 0
+    while True:
+        # Difficulty saugomas tik header'e kaip info, bet nenaudojamas hash'e
+        header = Header(
+            prev_block_hash=prev_hash,
+            version="v0.1",
+            transactions_hash=transactions_hash,
+            nonce=nonce,
+            difficulty=difficulty
+        )
+        # Hashuojam tik serialize (be difficulty)
+        block_hash = hash_string(header.serialize())
+        if block_hash.startswith(difficulty):
+            # Radom tinkamą hash
+            return Block(header, selected, block_hash)
+        nonce += 1
 
 
 def save_blocks(blocks: list, path: str):
@@ -88,10 +99,13 @@ def main():
     save_transactions(txs, TX_FILE)
     print(f"Saved {len(txs)} transactions -> {TX_FILE}")
 
-    print("Selecting 100 random transactions for a new block...")
-    new_blk = form_new_block("0"*64, txs, 100)
+    print("Mining new block with 100 random transactions...")
+    start = time.time()
+    new_blk = mine_block("0"*64, txs, 100, difficulty="000")
+    end = time.time()
     save_blocks([new_blk], BLOCK_FILE)
-    print(f"New block with {len(new_blk.transactions)} transactions -> {BLOCK_FILE}")
+    print(f"Block mined! Hash={new_blk.block_hash[:12]}... in {end-start:.2f} sec")
+    print(f"Saved block -> {BLOCK_FILE}")
 
     print("First 3 transactions in block:")
     for t in new_blk.transactions[:3]:

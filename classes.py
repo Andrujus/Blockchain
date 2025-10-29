@@ -45,17 +45,17 @@ class Transaction:
 
 
 class Header:
-    def __init__(self, prev_block_hash: str, version: str, transactions_hash: str, nonce: int, difficulty: str):
+    def __init__(self, prev_block_hash, version, transactions_hash, nonce):
         import time
         self.prev_block_hash = prev_block_hash
         self.version = version
         self.transactions_hash = transactions_hash
         self.nonce = nonce
-        self.difficulty = difficulty
         self.timestamp = int(time.time())
 
     def serialize(self) -> str:
-        return f"{self.prev_block_hash}|{self.version}|{self.transactions_hash}|{self.nonce}|{self.timestamp}|{self.difficulty}"
+        return f"{self.prev_block_hash}|{self.version}|{self.transactions_hash}|{self.nonce}|{self.timestamp}"
+
 
 
 class Block:
