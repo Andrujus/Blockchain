@@ -44,7 +44,7 @@
 ### 1. Sugeneruoti vartotojus ir transakcijas
 ```bash
 python users.py
-python transactions_gen.py
+python txgen.py
 ```
 
 ### 2. Iškasti blokus
