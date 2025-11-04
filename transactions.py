@@ -2,7 +2,7 @@ import json
 import random
 import time
 from pathlib import Path
-from merkle import merkle_root
+
 from classes import Transaction, Block, Header, hash_string, User
 
 TX_FILE = "transactions.json"
@@ -52,7 +52,7 @@ def pick_random_transactions(txs: list, k: int = 100) -> list:
 def mine_block(prev_hash: str, txs: list, k: int = 100, difficulty: str = "000") -> Block:
     selected = pick_random_transactions(txs, k)
     all_txids = "".join(tx.txid for tx in selected)
-    transactions_hash = merkle_root(all_txids)
+    transactions_hash = hash_string(all_txids)
 
     nonce = 0
     while True:
