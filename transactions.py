@@ -9,7 +9,7 @@ TX_FILE = "transactions.json"
 BLOCKCHAIN_FILE = "blockchain.json"
 USERS_FILE = "users.json"
 RANDOM_SEED = 42
-BLOCK_AMOUNT = 5
+BLOCK_AMOUNT = 10
 
 random.seed(RANDOM_SEED)
 
@@ -219,7 +219,7 @@ def main():
 
         print(f"\nMining block {i+1}/{BLOCK_AMOUNT}...")
         start = time.time()
-        blk = mine_block(prev_hash, txs, k=100, difficulty="000")
+        blk = mine_with_backoff(prev_hash, txs, users, difficulty="000", k=100, candidates_count=5)
         end = time.time()
         print(f" Block {i+1} mined in {end-start:.2f} sec. Hash={blk.block_hash[:12]}...")
 
