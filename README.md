@@ -56,3 +56,88 @@ Rezultatai:
 - `users.json` – vartotojų sąrašas ir jų balansai.
 - `transactions.json` – likusios transakcijos (nepanaudotos).
 - `blockchain.json` – blokų grandinė su patvirtintais blokais.
+
+# Supaprastinta Blockchain realizacija v0.2
+
+Ši versija išplečia ankstesnį projektą (v0.1), pridėdama **Merkle medžio**, **transakcijų verifikacijos** ir **patobulinto kasimo proceso** funkcionalumą.
+Vykdant šią versiją buvo laikomasi užduoties reikalavimų ir palaipsniui integruoti nauji komponentai.
+
+---
+
+## Naujos funkcijos ir patobulinimai
+
+### 1. **Merkle Tree ir Merkle Root Hash**
+
+Transakcijų maišos dabar formuojamos naudojant **Merkle medį** (`merkle.py`):
+
+* kiekvienos transakcijos `txid` yra įtraukiamas kaip lapas;
+* lapai poruojami ir maišomi į naujus mazgus;
+* galutinis „šaknis“ (Merkle Root Hash) įrašomas į `Header` lauką `transactions_hash`.
+
+
+<img width="902" height="745" alt="image" src="https://github.com/user-attachments/assets/0e22ef82-30e2-4e06-b2f2-9c768db947fd" />
+
+
+---
+
+### 2. **Transakcijų verifikacija**
+
+Įdiegta pilna transakcijų patikra prieš įtraukiant į bloką:
+
+* **TXID tikrinimas** – kiekvienai transakcijai iš naujo apskaičiuojamas `hash(sender|receiver|amount)` ir sulyginamas su saugomu `txid`.
+* **Balanso tikrinimas** – siuntėjo balansas tikrinamas kaupiamai vieno bloko ribose, kad neįvyktų „dvigubas išleidimas“.
+* **Sanity check’ai** – neleidžiamos transakcijos su neigiamomis sumomis, siuntimas sau pačiam ar nežinomais raktais.
+
+Failas `transactions.py` papildytas funkcija `verify_transactions()` (ankstesnis `mine_block()` naudoja tik patikrintas transakcijas).
+
+<img width="1121" height="798" alt="image" src="https://github.com/user-attachments/assets/8c9f6107-0121-40ff-8225-b3abac70b318" />
+
+
+---
+
+### 3. **Patobulintas kasimo procesas**
+
+Įgyvendintas decentralizuoto kasimo (Proof-of-Work) imitavimas:
+
+#### 3.1. **Kandidatinių blokų generavimas**
+
+* Iš viso sukuriama **5 kandidatinių blokų** po ~100 transakcijų.
+* Kiekvienas blokas turi savo `Header` su Merkle Root ir `nonce = 0`.
+
+#### 3.2. **Laiko ir bandymų limitas**
+
+* Visi 5 kandidatai kasami **„round-robin“ principu**, paeiliui skiriant jiems po tam tikrą bandymų kiekį.
+* Kasimo procesas trunka iki **5 sekundžių** (ar nurodyto hash bandymų skaičiaus).
+* Jei nė vienas blokas neiškasamas, **laiko limitas padvigubinamas** (5s → 10s → 20s) ir ciklas kartojamas.
+
+#### 3.3. **Sėkmės ir backoff mechanizmas**
+
+* Radus pirmą bloką, jo `nonce` ir `block_hash` išsaugomi kaip naujas patvirtintas blokas.
+* Jei per tris „backoff“ raundus nieko neiškasama, procesas sustoja.
+
+#### 1 pvz. **Su "000" difficulty**
+<img width="809" height="643" alt="image" src="https://github.com/user-attachments/assets/f7bbcb9d-a874-4543-9be4-308eff7726b3" />
+
+#### 2 pvz. **Su "00000" difficulty (pavyko iškast)**
+<img width="827" height="389" alt="image" src="https://github.com/user-attachments/assets/6f5e71fe-700a-4dfa-83f5-905f4fa3b270" />
+
+#### 3 pvz. **Su "00000" difficulty (nepavyko iškast)**
+<img width="681" height="361" alt="image" src="https://github.com/user-attachments/assets/09c429d3-7143-4684-be37-7fc5cbb326f4" />
+
+
+---
+## Naudojimas
+
+### Išlieka toks pat (žr. v0.1)
+
+---
+
+## AI pagalbos taikymai
+
+AI pagalba (naudota GPT-5) buvo pasitelkta šiais etapais:
+
+* **Merkle Tree** funkcijos kūrimas ir integravimas į `Header`;
+* **Kasimo proceso tobulinimas** – 5 kandidatinių blokų generavimas, round-robin ir backoff algoritmas;
+
+---
+
