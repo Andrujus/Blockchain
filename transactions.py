@@ -15,7 +15,6 @@ random.seed(RANDOM_SEED)
 
 
 def load_transactions(path: str):
-    """Užkrauna transakcijas iš JSON failo į Transaction objektus"""
     if not Path(path).exists():
         return []
     with open(path, "r", encoding="utf-8") as f:
@@ -24,14 +23,12 @@ def load_transactions(path: str):
 
 
 def save_transactions(txs, path: str):
-    """Išsaugo transakcijas į JSON failą"""
     Path(path).parent.mkdir(parents=True, exist_ok=True)
     with open(path, "w", encoding="utf-8") as f:
         json.dump([t.__dict__ for t in txs], f, indent=2, ensure_ascii=False)
 
 
 def load_users(path: str):
-    """Užkrauna vartotojus iš JSON failo į User objektus"""
     with open(path, "r", encoding="utf-8") as f:
         data = json.load(f)
     return [User(u["name"], u["public_key"], u["balance"]) for u in data]
@@ -48,17 +45,47 @@ def pick_random_transactions(txs: list, k: int = 100) -> list:
         raise ValueError(f"Requested {k} transactions, but only {len(txs)} available")
     return random.sample(txs, k)
 
+def verify_transactions(candidates: list, users: list, k: int) -> list:
+    user_map = {u.public_key: u for u in users}
+    temp_balances = {pk: user_map[pk].balance for pk in user_map}
+
+    selected = []
+    for tx in candidates:
+        if not tx.is_txid_valid():
+            continue
+        if tx.amount <= 0:
+            continue
+        if tx.sender == tx.receiver:
+            continue
+        if tx.sender not in temp_balances or tx.receiver not in temp_balances:
+            continue
+
+        if temp_balances[tx.sender] >= tx.amount:
+            temp_balances[tx.sender] -= tx.amount
+            temp_balances[tx.receiver] += tx.amount
+            selected.append(tx)
+            if len(selected) == k:
+                break
+
+    return selected
+
+
 
 def mine_block(prev_hash: str, txs: list, k: int = 100, difficulty: str = "000") -> Block:
-    selected = pick_random_transactions(txs, k)
-    all_txids = "".join(tx.txid for tx in selected)
-    transactions_hash = merkle_root(all_txids)
+    raw_candidates = pick_random_transactions(txs, min(3*k, len(txs)))
+    selected = verify_transactions(raw_candidates, load_users(USERS_FILE), k)
+
+    if len(selected) < k:
+        pass
+
+    txids = [tx.txid for tx in selected]
+    transactions_hash = merkle_root(txids)
 
     nonce = 0
     while True:
         header = Header(
             prev_block_hash=prev_hash,
-            version="v0.1",
+            version="v0.2",
             transactions_hash=transactions_hash,
             nonce=nonce,
             difficulty=difficulty
@@ -68,23 +95,21 @@ def mine_block(prev_hash: str, txs: list, k: int = 100, difficulty: str = "000")
             return Block(header, selected, block_hash)
         nonce += 1
 
-
 def confirm_block(block: Block, txs: list, users: list):
-
-    #pasalina ivykdytas transakcijas
     remaining = [t for t in txs if t.txid not in {x.txid for x in block.transactions}]
 
     user_map = {u.public_key: u for u in users}
 
     for tx in block.transactions:
-        if tx.sender in user_map and tx.receiver in user_map:
+        if tx.sender in user_map and tx.receiver in user_map and tx.is_txid_valid():
             sender = user_map[tx.sender]
             receiver = user_map[tx.receiver]
-            if sender.balance >= tx.amount:
+            if tx.amount > 0 and sender.public_key != receiver.public_key and sender.balance >= tx.amount:
                 sender.balance -= tx.amount
                 receiver.balance += tx.amount
 
     return remaining, list(user_map.values())
+
 
 
 def save_blockchain(blocks: list, path: str):
