@@ -9,7 +9,7 @@ TX_FILE = "transactions.json"
 BLOCKCHAIN_FILE = "blockchain.json"
 USERS_FILE = "users.json"
 RANDOM_SEED = 42
-BLOCK_AMOUNT = 10
+BLOCK_AMOUNT = 3
 
 random.seed(RANDOM_SEED)
 
@@ -71,7 +71,7 @@ def verify_transactions(candidates: list, users: list, k: int) -> list:
 
 
 
-def mine_block(prev_hash: str, txs: list, k: int = 100, difficulty: str = "000") -> Block:
+def mine_block(prev_hash: str, txs: list, k: int = 100, difficulty: str = "0000") -> Block:
     raw_candidates = pick_random_transactions(txs, min(3*k, len(txs)))
     selected = verify_transactions(raw_candidates, load_users(USERS_FILE), k)
 
@@ -125,7 +125,7 @@ def save_blockchain(blocks: list, path: str):
     with open(path, "w", encoding="utf-8") as f:
         json.dump([block_to_dict(b) for b in blocks], f, indent=2, ensure_ascii=False)
 
-def build_candidate(prev_hash: str, txs: list, users: list, k: int = 100, difficulty: str = "000"):
+def build_candidate(prev_hash: str, txs: list, users: list, k: int = 100, difficulty: str = "0000"):
     """Sukuria vieną kandidatinį bloką su iki k validžių transakcijų."""
     raw_candidates = pick_random_transactions(txs, min(3 * k, len(txs)))
     selected = verify_transactions(raw_candidates, users, k)
@@ -175,7 +175,7 @@ def mine_candidates_round_robin(candidates: list, time_limit: float = 5.0, step:
     return None, None, None
 
 
-def mine_with_backoff(prev_hash: str, txs: list, users: list, difficulty="000",
+def mine_with_backoff(prev_hash: str, txs: list, users: list, difficulty="0000",
                       k: int = 100, candidates_count: int = 5,
                       initial_time: float = 5.0, backoff_rounds: int = 3):
     """
@@ -219,7 +219,7 @@ def main():
 
         print(f"\nMining block {i+1}/{BLOCK_AMOUNT}...")
         start = time.time()
-        blk = mine_with_backoff(prev_hash, txs, users, difficulty="000", k=100, candidates_count=5)
+        blk = mine_with_backoff(prev_hash, txs, users, difficulty="0000", k=100, candidates_count=5)
         end = time.time()
         print(f" Block {i+1} mined in {end-start:.2f} sec. Hash={blk.block_hash[:12]}...")
 
