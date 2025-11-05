@@ -125,7 +125,80 @@ def save_blockchain(blocks: list, path: str):
     with open(path, "w", encoding="utf-8") as f:
         json.dump([block_to_dict(b) for b in blocks], f, indent=2, ensure_ascii=False)
 
+def build_candidate(prev_hash: str, txs: list, users: list, k: int = 100, difficulty: str = "000"):
+    """Sukuria vieną kandidatinį bloką su iki k validžių transakcijų."""
+    raw_candidates = pick_random_transactions(txs, min(3 * k, len(txs)))
+    selected = verify_transactions(raw_candidates, users, k)
+    txids = [tx.txid for tx in selected]
+    transactions_hash = merkle_root(txids)
+    header = Header(prev_block_hash=prev_hash, version="v0.2", transactions_hash=transactions_hash,
+                    nonce=0, difficulty=difficulty)
+    return {"header": header, "transactions": selected, "nonce": 0}
 
+
+def generate_candidates(prev_hash: str, txs: list, users: list, count: int = 5, k: int = 100, difficulty: str = "000"):
+    """Sugeneruoja kelis (pvz., 5) kandidatus vienu metu."""
+    return [build_candidate(prev_hash, txs, users, k, difficulty) for _ in range(count)]
+
+
+def try_mine(header: Header, start_nonce: int, steps: int) -> tuple[bool, int, str]:
+    """Bando kasti nuo start_nonce iki start_nonce+steps; grąžina (rasta?, nonce, hash)."""
+    nonce = start_nonce
+    for _ in range(steps):
+        header.nonce = nonce
+        block_hash = hash_string(header.serialize())
+        if block_hash.startswith(header.difficulty):
+            return True, nonce, block_hash
+        nonce += 1
+    return False, nonce, ""
+
+
+def mine_candidates_round_robin(candidates: list, time_limit: float = 5.0, step: int = 1_000):
+    """Round-robin kasimas: paeiliui bandom kiekvieną kandidatą mažais etapais, kol baigsis laikas."""
+    start_time = time.time()
+    total_hashes = 0
+    idx = 0
+    n = len(candidates)
+
+    while time.time() - start_time < time_limit:
+        cand = candidates[idx]
+        found, new_nonce, block_hash = try_mine(cand["header"], cand["nonce"], step)
+        cand["nonce"] = new_nonce
+        total_hashes += step
+
+        if found:
+            print(f"✓ Kandidatas #{idx} iškastas po {total_hashes} hash bandymų.")
+            return idx, cand, block_hash
+
+        idx = (idx + 1) % n  # pereinam prie kito
+    print("✗ Nepavyko iškasti per laiko limitą.")
+    return None, None, None
+
+
+def mine_with_backoff(prev_hash: str, txs: list, users: list, difficulty="000",
+                      k: int = 100, candidates_count: int = 5,
+                      initial_time: float = 5.0, backoff_rounds: int = 3):
+    """
+    Atlieka kelių raundų kasimą su didėjančiu laiko limitu.
+    Pavyzdžiui: 5s -> 10s -> 20s, kol pavyks iškasti bent vieną bloką.
+    """
+    time_limit = initial_time
+    for round_i in range(1, backoff_rounds + 1):
+        print(f"\n🌀 Raundas {round_i}: kasimo laikas {time_limit:.1f}s, {candidates_count} kandidatai.")
+        candidates = generate_candidates(prev_hash, txs, users, candidates_count, k, difficulty)
+        idx, found, blk_hash = mine_candidates_round_robin(candidates, time_limit)
+
+        if found:
+            header = found["header"]
+            header.nonce = found["nonce"]
+            block = Block(header, found["transactions"], blk_hash)
+            print(f"✅ Sėkmingai iškastas kandidatas #{idx} su hash {blk_hash[:12]}...")
+            return block
+
+        time_limit *= 2  # padidinam laiko limitą
+
+    print("❌ Nepavyko iškasti nė vieno bloko po visų raundų.")
+    return None
 
 def main():
     print(f"Loading users from {USERS_FILE}...")
