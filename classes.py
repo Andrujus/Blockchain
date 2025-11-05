@@ -47,12 +47,17 @@ class User:
 
 
 class Transaction:
-    def __init__(self, sender: str, receiver: str, amount: int):
+    def __init__(self, sender: str, receiver: str, amount: int, txid: str | None = None):
         self.sender = sender
         self.receiver = receiver
         self.amount = amount
+
         raw = f"{sender}|{receiver}|{amount}"
-        self.txid = hash_string(raw)
+        self.computed_txid = hash_string(raw)
+        self.txid = txid if txid is not None else self.computed_txid
+
+    def is_txid_valid(self) -> bool:
+        return self.txid == self.computed_txid
 
 
 class Header:
