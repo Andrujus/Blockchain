@@ -1,41 +1,79 @@
-# Prekės rezervavimo išmanioji sutartis
+#  Nuomos Užtikrinimo Sistema (Smart Contract)
 
-## 1. Verslo modelio aprašymas
+Šis projektas įgyvendina blockchain pagrįstą **nuomos saugumo modelį**, kuriame dalyvauja **trys šalys**:
 
-Ši išmanioji sutartis realizuoja **paprastą prekės rezervavimo** modelį tarp dviejų šalių:
+- **Nuomininkas (Renter)** — rezervuoja objektą ir sumoka depozitą.
+- **Nuomotojas (Owner)** — patvirtina rezervaciją ir gauna mokėjimą po patikrinimo.
+- **Prižiūrėtojas/Brokeris (Inspector/Broker)** — nepriklausomas trečias asmuo, kuris patvirtina objekto būklę prieš išmokant lėšas.
 
-- **Pirkėjas (Buyer)** – nori rezervuoti prekę ir sumoka užstatą (ETH).
-- **Pardavėjas (Seller)** – sutinka rezervuoti prekę Pirkėjui ir patvirtina rezervaciją.
-
-Kontraktas veikia kaip tarpininkas / saugus „užstato laikytojas“ (escrow):
-
-1. Pirkėjas rezervuoja prekę ir į kontraktą įneša ETH.
-2. Pardavėjas patvirtina rezervaciją.
-3. Pirkėjas priima galutinį sprendimą:
-   - patvirtina pirkimą → pinigai išmokami Pardavėjui;
-   - atšaukia rezervaciją → pinigai grąžinami Pirkėjui.
-
-Taip užtikrinama, kad:
-- Pardavėjas negauna pinigų, kol Pirkėjas nepatvirtina.
-- Pirkėjas negali vienašališkai atsiimti pinigų po to, kai prekė rezervuota ir sandoris užbaigtas.
+Sistema užtikrina, kad **depozitas būtų laikomas saugiai kontrakte**, kol procesas pilnai užbaigtas.
 
 ---
 
-## 2. Pagrindiniai veikėjai (roles)
+##  Pagrindinė idėja
 
-- **Buyer (Pirkėjas)**  
-  - Kvies `reserveItem` – sukuria rezervaciją ir įneša ETH.  
-  - Kvies `approve` – patvirtina pirkimą ir leidžia pervesti ETH Pardavėjui.  
-  - Kvies `cancel` – atšaukia rezervaciją (kol sandoris neužbaigtas) ir atgauna ETH.
+1. **Nuomininkas** rezervuoja objektą ir į kontraktą sumoka depozitą.
+2. **Nuomotojas** patvirtina, kad nuoma galioja.
+3. **Prižiūrėtojas** po nuomos laikotarpio atlieka patikrą.
 
-- **Seller (Pardavėjas)**  
-  - Nurodomas rezervuojant prekę (kaip adresas).  
-  - Kvies `confirm` – patvirtina, kad sutinka su rezervacija.  
-  - Gavęs patvirtinimą (`approve`), gauna ETH.
+### Remiantis patikros rezultatu:
 
-- **Smart Contract (kontraktas)**  
-  - Laiko užstatą (ETH) iki galutinio sprendimo.  
-  - Tikrina kas kviečia funkcijas (Pirkėjas ar Pardavėjas).  
-  - Valdo rezervacijos būseną (`Status`) ir atlieka pinigų pervedimus.
+-  **Jei objektas tvarkingas** → depozitas atitenka Nuomotojui
+-  **Jei yra pažeidimų arba ginčas** → depozitas grąžinamas Nuomininkui
+
+Sistema sukurta taip, kad **nė viena šalis negalėtų pavogti ar pasisavinti lėšų** — kontraktas yra tarpininkas, valdantis procesą pagal aiškias, nekintamas taisykles.
+
+---
+
+##  Kontrakto struktūra
+
+### Dalyviai:
+
+- **renter** — rezervavęs nuomininkas
+- **owner** — objekto savininkas
+- **inspector** — patikrą atliekanti šalis
+
+### Kontrakto būsenos:
+
+- `PENDING` — Laukiama Nuomotojo patvirtinimo
+- `APPROVED` — Nuomotojas patvirtino, laukiama Prižiūrėtojo patikros
+- `INSPECTED` — Prižiūrėtojas atliko patikrą
+- `RELEASED` — Pinigai išmokėti, sandoris baigtas
+- `CANCELLED` — Sandoris atšauktas, depozitas grąžintas
+
+### Pagrindinės funkcijos:
+
+#### `rentProperty(address _owner, address _inspector) payable`
+
+- Nuomininkas rezervuoja objektą ir sumoka depozitą
+- Reikalingas: `msg.value > 0`
+
+#### `confirmRental()`
+
+- Nuomotojas patvirtina nuomos sandorį
+- Keičia būseną į `APPROVED`
+
+#### `inspectProperty(bool _isGood)`
+
+- Prižiūrėtojas patvirtina objekto būklę
+- `_isGood = true` → depozitas atitenka Nuomotojui
+- `_isGood = false` → depozitas grąžinamas Nuomininkui
+
+#### `cancelRental()`
+
+- Nuomininkas gali atšaukti sandorį (tik `PENDING` būsenoje)
+- Depozitas grąžinamas Nuomininkui
+
+#### `releaseDeposit()`
+
+- Nuomotojo saugumo funkcija — išmoka depozitą po Prižiūrėtojo patvirtinimo
+
+---
+
+##  Tipiniai scenarijai
+
+ **Saugumo užtikrinimas** — Trečias nepriklausomas asmuo (Inspector) užtikrina šalių sąžiningumą  
+ **Nepildomos pervedimų** — Pinigai išmokami tik atlikus nustatytus žingsnius  
+ **Ginčo sprendimas** — Jei objektas pažeistas, depozitas grąžinamas Nuomininkui  
 
 ---
