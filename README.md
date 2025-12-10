@@ -77,3 +77,6 @@ Sistema sukurta taip, kad **nė viena šalis negalėtų pavogti ar pasisavinti l
  **Ginčo sprendimas** — Jei objektas pažeistas, depozitas grąžinamas Nuomininkui  
 
 ---
+## Verslo modelio srautų diagrama (Squence diagram)
+
+<img width="602" height="592" alt="Blockchain drawio" src="https://github.com/user-attachments/assets/83fac583-58b4-480a-a037-731b8598fbee" />
