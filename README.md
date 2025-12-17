@@ -353,3 +353,44 @@ Etherscan platformoje buvo matomi šie įvykiai:
 
 
 ---
+
+## Front-end
+
+Ši decentralizuota aplikacija (DApp) realizuoja naudotojo sąsają, leidžiančią vykdyti sąveiką su Ethereum tinkle (Sepolia testnet) įdiegta išmaniąja sutartimi RentalEscrow.
+
+<img width="1905" height="996" alt="frontas1" src="https://github.com/user-attachments/assets/ec413611-5e6b-4e54-9c10-226da412d402" />
+
+<img width="1919" height="992" alt="frontas2" src="https://github.com/user-attachments/assets/330e9792-6b27-487f-ba31-e63a626ed246" />
+
+<img width="1903" height="923" alt="frontas3" src="https://github.com/user-attachments/assets/07e70f05-4ec5-4f48-ae71-e7f884f9d828" />
+
+<img width="1260" height="890" alt="frontas4" src="https://github.com/user-attachments/assets/cc557307-4d21-4aee-a6f8-299b082e1734" />
+
+## Funkcionalumas pagal vaidmenis
+### Nuomininkas (Renter)
+
+- Sukuria nuomos užsakymą (rentProperty) ir įneša depozitą (ETH)
+
+- Gali atšaukti užsakymą, kol jis dar nepatvirtintas (cancelRental)
+
+- Gali peržiūrėti užsakymo būseną ir duomenis
+
+### Nuomotojas (Owner)
+
+- Patvirtina nuomos užsakymą (confirmRental)
+
+- Matomas įspėjimas, jei prisijungęs account’as nėra tikrasis nuomotojas
+
+### Inspektorius / Brokeris (Inspector)
+
+- Atlieka būklės patikrą (inspectProperty)
+
+- Pažymi patikrą kaip sėkmingą arba nesėkmingą
+
+### Bendros funkcijos
+
+- Depozito išmokėjimas (releaseDeposit)
+
+- Užsakymo informacijos peržiūra (getOrder)
+
+- Užsakymo būsenos atvaizdavimas (PENDING, APPROVED, INSPECTED, RELEASED, CANCELLED)
