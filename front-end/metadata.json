@@ -1,0 +1,5 @@
+{
+  "name": "RentalEscrow DApp",
+  "description": "A decentralized rental escrow application built for the Ethereum Sepolia network, allowing renters, owners, and inspectors to manage property rentals securely.",
+  "requestFramePermissions": []
+}
