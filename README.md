@@ -25,58 +25,72 @@ Sistema sukurta taip, kad **nė viena šalis negalėtų pavogti ar pasisavinti l
 
 ---
 
-##  Kontrakto struktūra
-
-### Dalyviai:
-
-- **renter** — rezervavęs nuomininkas
-- **owner** — objekto savininkas
-- **inspector** — patikrą atliekanti šalis
-
-### Kontrakto būsenos:
-
-- `PENDING` — Laukiama Nuomotojo patvirtinimo
-- `APPROVED` — Nuomotojas patvirtino, laukiama Prižiūrėtojo patikros
-- `INSPECTED` — Prižiūrėtojas atliko patikrą
-- `RELEASED` — Pinigai išmokėti, sandoris baigtas
-- `CANCELLED` — Sandoris atšauktas, depozitas grąžintas
-
-### Pagrindinės funkcijos:
-
-#### `rentProperty(address _owner, address _inspector) payable`
-
-- Nuomininkas rezervuoja objektą ir sumoka depozitą
-- Reikalingas: `msg.value > 0`
-
-#### `confirmRental()`
-
-- Nuomotojas patvirtina nuomos sandorį
-- Keičia būseną į `APPROVED`
-
-#### `inspectProperty(bool _isGood)`
-
-- Prižiūrėtojas patvirtina objekto būklę
-- `_isGood = true` → depozitas atitenka Nuomotojui
-- `_isGood = false` → depozitas grąžinamas Nuomininkui
-
-#### `cancelRental()`
-
-- Nuomininkas gali atšaukti sandorį (tik `PENDING` būsenoje)
-- Depozitas grąžinamas Nuomininkui
-
-#### `releaseDeposit()`
-
-- Nuomotojo saugumo funkcija — išmoka depozitą po Prižiūrėtojo patvirtinimo
-
----
-
-##  Tipiniai scenarijai
-
- **Saugumo užtikrinimas** — Trečias nepriklausomas asmuo (Inspector) užtikrina šalių sąžiningumą  
- **Nepildomos pervedimų** — Pinigai išmokami tik atlikus nustatytus žingsnius  
- **Ginčo sprendimas** — Jei objektas pažeistas, depozitas grąžinamas Nuomininkui  
-
----
 ## Verslo modelio srautų diagrama (Squence diagram)
 
 <img width="602" height="592" alt="Blockchain drawio" src="https://github.com/user-attachments/assets/83fac583-58b4-480a-a037-731b8598fbee" />
+
+# RentalEscrow – Veikimo Principas
+
+## Apžvalga
+`RentalEscrow` – tai išmanusis kontraktas, skirtas nuomos depozito laikymui (escrow) tarp trijų šalių:
+- **Renter** – nuomininkas (įneša depozitą)
+- **Owner** – nuomotojas (patvirtina nuomą)
+- **Inspector** – nepriklausomas patikrintojas (priima sprendimą)
+
+Kontraktas laiko depozitą iki patikros pabaigos ir automatiškai jį išmoka teisingai pusei.
+
+---
+
+## Būsenų eiga (State Machine)
+
+1. **PENDING** – renter sukuria užsakymą ir įneša depozitą  
+2. **APPROVED** – owner patvirtina nuomą  
+3. **INSPECTED** – inspector atlieka patikrą (passed / failed)  
+4. **RELEASED** – depozitas išmokėtas owner arba renter  
+5. **CANCELLED** – renter atšaukia kol dar PENDING (depozitas grąžinamas)
+
+---
+
+## Pagrindinės funkcijos
+
+### `rentProperty(owner, inspector)`
+- Kviečia **renter**
+- Sukuria užsakymą ir įneša ETH depozitą
+- Būsena → `PENDING`
+
+### `confirmRental(orderId)`
+- Kviečia **owner**
+- Patvirtina nuomą
+- Būsena → `APPROVED`
+
+### `cancelRental(orderId)`
+- Kviečia **renter**
+- Galima tik `PENDING` būsenoje
+- Depozitas grąžinamas renter
+- Būsena → `CANCELLED`
+
+### `inspectProperty(orderId, passed)`
+- Kviečia **inspector**
+- Atlieka patikrą
+- Būsena → `INSPECTED`
+
+### `releaseDeposit(orderId)`
+- Gali kviesti bet kas
+- Jei `passed == true` → depozitas owner
+- Jei `passed == false` → depozitas renter
+- Būsena → `RELEASED`
+
+---
+
+## Saugumas
+- Naudojamas `nonReentrant` apsaugai nuo reentrancy atakų
+- Griežti role-based modifieriai (`onlyRenter`, `onlyOwner`, `onlyInspector`)
+- ETH pervedimai vykdomi tik po būsenos atnaujinimo
+
+---
+
+## Paskirtis
+Šis kontraktas skirtas:
+- decentralizuotai nuomos depozito kontrolei
+- skaidriam ir automatiškam lėšų paskirstymui
+- paprastam integravimui į DApp ar Front-End sprendimus
