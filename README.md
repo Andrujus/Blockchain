@@ -207,4 +207,149 @@ Tai patvirtina, kad **depozitas buvo pervestas teisingai pagal verslo logiką**.
 
 <img width="2808" height="1095" alt="kontrakt2" src="https://github.com/user-attachments/assets/1d66cfa1-f297-4882-a8d3-0fc84ed01272" />
 
+# Smart Contract Testavimas Ethereum Sepolia Tinkle
 
+Šiame skyriuje aprašomas išmaniosios sutarties **RentalEscrow** testavimas viešajame Ethereum testiniame tinkle **Sepolia**, naudojant **Remix IDE**, **MetaMask** ir **Etherscan**.
+
+Testavimo tikslas – patikrinti, ar išmanioji sutartis veikia pagal aprašytą verslo logiką, ir ar teisingai registruojami sandoriai bei įvykiai (events) blockchain tinkle.
+
+---
+
+## Naudoti įrankiai
+
+- **Ethereum testnet:** Sepolia  
+- **Išmaniosios sutarties IDE:** Remix IDE  
+- **Piniginė:** MetaMask  
+- **Blockchain naršyklė:** Sepolia Etherscan  
+
+---
+
+## Testavimo aplinka
+
+Testavimui buvo naudojami trys skirtingi Ethereum adresai (MetaMask paskyros), atitinkantys verslo modelio dalyvius:
+
+- **Renter (Nuomininkas)** – sukuria užsakymą ir įneša depozitą  
+- **Owner (Nuomotojas)** – patvirtina nuomą  
+- **Inspector (Inspektorius)** – atlieka patikrą  
+
+Kiekviena paskyra turėjo pakankamai **SepoliaETH**, gauto iš testinio faucet.
+
+---
+
+## 1. Išmaniosios sutarties diegimas (Deploy) į Sepolia
+
+Išmanioji sutartis buvo įdiegta naudojant **Remix IDE**, pasirenkant aplinką:
+
+```
+Injected Provider – MetaMask
+```
+
+MetaMask buvo perjungtas į **Sepolia test network**.
+
+<img width="2840" height="1498" alt="image" src="https://github.com/user-attachments/assets/f65ae4df-2cb5-47ad-bbe7-d591bdfbb582" />
+
+
+---
+
+## 2. Užsakymo sukūrimas ir depozito įnešimas (rentProperty)
+
+### Veikėjas
+**Renter**
+
+### Veiksmai
+- MetaMask aktyvuota renter paskyra
+- Nustatyta transakcijos vertė:
+  - `0.001 ETH` (`1000000000000000 Wei`)
+- Iškviečiama funkcija:
+
+```
+rentProperty(ownerAddress, inspectorAddress)
+```
+
+### Rezultatas
+- Sukurtas naujas užsakymas (`orderId = 1`)
+- Kontrakto būsena: **PENDING**
+- Sugeneruotas įvykis `OrderCreated`
+
+<img width="2111" height="964" alt="image" src="https://github.com/user-attachments/assets/7c3e0b74-7e66-48cd-b9aa-58841a20cbd2" />
+
+
+---
+
+## 3. Nuomos patvirtinimas (confirmRental)
+
+### Veikėjas
+**Owner**
+
+### Veiksmai
+- MetaMask perjungta į owner paskyrą
+- Iškviečiama funkcija:
+
+```
+confirmRental(1)
+```
+
+### Rezultatas
+- Užsakymo būsena pakeista į **APPROVED**
+- Sugeneruotas įvykis `OrderApproved`
+
+<img width="2118" height="1019" alt="image" src="https://github.com/user-attachments/assets/9cb69156-089f-4d2f-b720-de430f77054e" />
+
+---
+
+## 4. Patikros atlikimas (inspectProperty)
+
+### Veikėjas
+**Inspector**
+
+### Veiksmai
+- MetaMask perjungta į inspector paskyrą
+- Iškviečiama funkcija:
+
+```
+inspectProperty(1, true)
+```
+
+### Rezultatas
+- Užsakymo būsena pakeista į **INSPECTED**
+- Sugeneruotas įvykis `OrderInspected`
+
+<img width="2124" height="1107" alt="image" src="https://github.com/user-attachments/assets/07429750-4ad3-4303-a43d-f61d37165fd9" />
+
+---
+
+## 5. Depozito išmokėjimas (releaseDeposit)
+
+### Veikėjas
+Bet kuris (renter / owner / inspector)
+
+### Veiksmai
+- Iškviečiama funkcija:
+
+<img width="2134" height="1117" alt="image" src="https://github.com/user-attachments/assets/9ffd42a0-d036-4c04-81e8-6c6c7861a064" />
+
+
+### Rezultatas
+- Užsakymo būsena pakeista į **RELEASED**
+- Depozitas išmokėtas pagal patikros rezultatą
+- Sugeneruotas įvykis `DepositReleased`
+
+<img width="682" height="558" alt="image" src="https://github.com/user-attachments/assets/876d4fb2-22a0-4e94-a97e-f3390faf3a3d" />
+
+---
+
+## 6. Transakcijų ir įvykių peržiūra Etherscan
+
+Visos atliktos transakcijos ir sugeneruoti įvykiai buvo peržiūrėti naudojant **Sepolia Etherscan**.
+
+Etherscan platformoje buvo matomi šie įvykiai:
+
+- `OrderCreated`
+- `OrderApproved`
+- `OrderInspected`
+- `DepositReleased`
+
+<img width="2106" height="1083" alt="image" src="https://github.com/user-attachments/assets/949ead70-12bd-46bd-b5d8-2f61c8dbeb72" />
+
+
+---
