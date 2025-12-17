@@ -70,7 +70,6 @@ const App: React.FC = () => {
       console.error(err);
     }
   };
-
   const switchAccount = async () => {
     if (!window.ethereum) {
       alert("Please install MetaMask!");
@@ -101,6 +100,24 @@ const App: React.FC = () => {
       });
     }
   }, [updateWalletInfo]);
+
+  // Rebind contract to the current signer whenever account/chain/contractAddress changes
+  useEffect(() => {
+    const rebind = async () => {
+      if (!window.ethereum) return;
+      if (!contractAddress || !isValidAddress(contractAddress)) return;
+      try {
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        const signer = await provider.getSigner();
+        setContract(
+          new ethers.Contract(contractAddress, RentalEscrowABI, signer)
+        );
+      } catch (e) {
+        // ignore
+      }
+    };
+    rebind();
+  }, [account, chainId, contractAddress]);
 
   const loadContract = () => {
     if (!isValidAddress(contractAddress)) {
@@ -151,18 +168,35 @@ const App: React.FC = () => {
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
 
-      const factory = new ethers.ContractFactory(
-        RentalEscrowABI,
-        RentalEscrowBytecode,
-        signer
-      );
+      // Try dynamic compile via dev endpoint, fallback to bundled ABI/bytecode
+      let abi: ethers.InterfaceAbi =
+        RentalEscrowABI as unknown as ethers.InterfaceAbi;
+      let bytecode: string = RentalEscrowBytecode;
+      try {
+        const resp = await fetch("/api/compile", { method: "POST" });
+        if (resp.ok) {
+          const data = await resp.json();
+          if (
+            data?.abi &&
+            data?.bytecode &&
+            typeof data.bytecode === "string" &&
+            data.bytecode.startsWith("0x")
+          ) {
+            abi = data.abi as ethers.InterfaceAbi;
+            bytecode = data.bytecode as string;
+          }
+        }
+      } catch (_) {
+        // ignore; fallback to bundled bytecode
+      }
 
+      const factory = new ethers.ContractFactory(abi, bytecode, signer);
       const contract = await factory.deploy();
       await contract.waitForDeployment();
 
       const address = await contract.getAddress();
       setContractAddress(address);
-      setContract(contract);
+      setContract(new ethers.Contract(address, abi, signer));
 
       setToast({
         message: `Contract deployed at ${address}`,

@@ -194,8 +194,7 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function",
-      "constant": true
+      "type": "function"
     },
     {
       "inputs": [
@@ -266,8 +265,7 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function",
-      "constant": true
+      "type": "function"
     },
     {
       "inputs": [
@@ -291,8 +289,7 @@
         }
       ],
       "stateMutability": "payable",
-      "type": "function",
-      "payable": true
+      "type": "function"
     },
     {
       "inputs": [
@@ -12774,8 +12771,7 @@
     }
   },
   "schemaVersion": "3.4.16",
-  "updatedAt": "2025-12-17T21:16:33.576Z",
-  "networkType": "ethereum",
+  "updatedAt": "2025-12-17T22:46:42.432Z",
   "devdoc": {
     "details": "Sukurta pagal repo README aprašytą verslo modelį: depozitas laikomas kontrakte iki patikros sprendimo. Modelis: PENDING -> APPROVED -> INSPECTED -> RELEASED  arba  PENDING -> CANCELLED",
     "kind": "dev",
