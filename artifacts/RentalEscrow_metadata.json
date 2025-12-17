@@ -1,0 +1,430 @@
+{
+	"compiler": {
+		"version": "0.8.31+commit.fd3a2265"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [],
+				"name": "InvalidAddress",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "InvalidDeposit",
+				"type": "error"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "enum RentalEscrow.Status",
+						"name": "expected",
+						"type": "uint8"
+					},
+					{
+						"internalType": "enum RentalEscrow.Status",
+						"name": "got",
+						"type": "uint8"
+					}
+				],
+				"name": "InvalidState",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "NotInspector",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "NotOwner",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "NotRenter",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "OrderNotFound",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "TransferFailed",
+				"type": "error"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "orderId",
+						"type": "uint256"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "to",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amountWei",
+						"type": "uint256"
+					}
+				],
+				"name": "DepositReleased",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "orderId",
+						"type": "uint256"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					}
+				],
+				"name": "OrderApproved",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "orderId",
+						"type": "uint256"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "renter",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "refundWei",
+						"type": "uint256"
+					}
+				],
+				"name": "OrderCancelled",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "orderId",
+						"type": "uint256"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "renter",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "inspector",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "depositWei",
+						"type": "uint256"
+					}
+				],
+				"name": "OrderCreated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "orderId",
+						"type": "uint256"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "inspector",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "bool",
+						"name": "passed",
+						"type": "bool"
+					}
+				],
+				"name": "OrderInspected",
+				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "orderId",
+						"type": "uint256"
+					}
+				],
+				"name": "cancelRental",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "orderId",
+						"type": "uint256"
+					}
+				],
+				"name": "confirmRental",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "orderId",
+						"type": "uint256"
+					}
+				],
+				"name": "getOrder",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "address payable",
+								"name": "renter",
+								"type": "address"
+							},
+							{
+								"internalType": "address payable",
+								"name": "owner",
+								"type": "address"
+							},
+							{
+								"internalType": "address",
+								"name": "inspector",
+								"type": "address"
+							},
+							{
+								"internalType": "uint256",
+								"name": "depositWei",
+								"type": "uint256"
+							},
+							{
+								"internalType": "enum RentalEscrow.Status",
+								"name": "status",
+								"type": "uint8"
+							},
+							{
+								"internalType": "bool",
+								"name": "inspectionPassed",
+								"type": "bool"
+							},
+							{
+								"internalType": "uint256",
+								"name": "createdAt",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "approvedAt",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "inspectedAt",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "closedAt",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct RentalEscrow.RentalOrder",
+						"name": "",
+						"type": "tuple"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "orderId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bool",
+						"name": "passed",
+						"type": "bool"
+					}
+				],
+				"name": "inspectProperty",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "orderCount",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "orderId",
+						"type": "uint256"
+					}
+				],
+				"name": "releaseDeposit",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address payable",
+						"name": "owner",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "inspector",
+						"type": "address"
+					}
+				],
+				"name": "rentProperty",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "orderId",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "payable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"details": "Sukurta pagal repo README aprašytą verslo modelį: depozitas laikomas kontrakte iki patikros sprendimo. Modelis: PENDING -> APPROVED -> INSPECTED -> RELEASED  arba  PENDING -> CANCELLED",
+			"kind": "dev",
+			"methods": {
+				"inspectProperty(uint256,bool)": {
+					"params": {
+						"passed": "true jei būklė gera (depozitas atitenka owner), false jei bloga (grąžinamas renter)"
+					}
+				},
+				"releaseDeposit(uint256)": {
+					"details": "Gali kviesti bet kas (patogu DApp’ui), bet išmoka tik pagal taisykles."
+				},
+				"rentProperty(address,address)": {
+					"params": {
+						"inspector": "Nepriklausomo inspektoriaus adresas",
+						"owner": "Nuomotojo adresas"
+					},
+					"returns": {
+						"orderId": "Naujo užsakymo ID"
+					}
+				}
+			},
+			"title": "Nuomos Užtikrinimo Sistema (Rental Deposit Escrow)",
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {
+				"cancelRental(uint256)": {
+					"notice": "Renter gali atšaukti tik kol laukia owner patvirtinimo (PENDING)"
+				},
+				"confirmRental(uint256)": {
+					"notice": "Owner patvirtina nuomą"
+				},
+				"inspectProperty(uint256,bool)": {
+					"notice": "Inspector atlieka patikrą po to kai owner patvirtino (APPROVED)"
+				},
+				"releaseDeposit(uint256)": {
+					"notice": "Išmoka depozitą pagal patikros rezultatą (po INSPECTED)"
+				},
+				"rentProperty(address,address)": {
+					"notice": "Renter sukuria nuomos užsakymą ir įneša depozitą"
+				}
+			},
+			"notice": "3 šalys: renter (nuomininkas), owner (nuomotojas), inspector (nepriklausomas patikros atlikėjas)",
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"order.sol": "RentalEscrow"
+		},
+		"evmVersion": "osaka",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"order.sol": {
+			"keccak256": "0x472cb500ea99987d6657f44605ab91af0ac084a9717649181fa9ed96faed8e12",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://14c23bbbb45c89cc03b1d24e336f9bb652ccfb88fbab834b7053eb1268cfe49d",
+				"dweb:/ipfs/QmTPte7YXXCwNYfsDVARBrepK5cTFci9NHWKTRMXXfb8Gi"
+			]
+		}
+	},
+	"version": 1
+}
