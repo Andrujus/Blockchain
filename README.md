@@ -89,8 +89,122 @@ Kontraktas laiko depozitą iki patikros pabaigos ir automatiškai jį išmoka te
 
 ---
 
-## Paskirtis
-Šis kontraktas skirtas:
-- decentralizuotai nuomos depozito kontrolei
-- skaidriam ir automatiškam lėšų paskirstymui
-- paprastam integravimui į DApp ar Front-End sprendimus
+# RentalEscrow – Lokalaus Tinklo Testavimas (Ganache + Truffle)
+
+Šiame dokumente aprašomas **`RentalEscrow` išmaniosios sutarties testavimas lokaliame Ethereum tinkle**, naudojant **Ganache** ir **Truffle Console**.  
+Testavimo tikslas – įrodyti, kad **depozitas (ETH) teisingai pervedamas** pagal verslo logiką.
+
+---
+
+## 1. Testavimo aplinka
+
+- Lokalūs Ethereum mazgai: **Ganache**
+- Smart contract valdymas: **Truffle**
+- Tinklas: `development`
+- Kontraktas: `RentalEscrow`
+
+**Naudojami accountai:**
+- `accounts[0]` – Renter (nuomininkas)
+- `accounts[1]` – Owner (nuomotojas)
+- `accounts[2]` – Inspector (inspektorius)
+- `accounts[3]` – Trečiasis asmuo (kviečia `releaseDeposit`)
+---
+
+## 2. Pradiniai balansai (prieš testą)
+
+Per Truffle console patikrinami balansai:
+
+- Renter: ~99.99 ETH  
+- Owner: 100 ETH  
+- Inspector: 100 ETH  
+
+Tai rodo, kad **dar prieš testą jokie pervedimai nebuvo įvykę**.
+<img width="1368" height="239" alt="image" src="https://github.com/user-attachments/assets/c6a64e94-240a-4676-8a1c-8e6e991768c5" />
+
+---
+
+## 3. Užsakymo (Order) sukūrimas
+
+Renter sukuria nuomos užsakymą ir įneša **1 ETH depozitą**:
+
+- Kvietimas: `rentProperty(owner, inspector)`
+- Būsena: `PENDING`
+- Sugeneruojamas `orderId = 1`
+
+<img width="1694" height="122" alt="image" src="https://github.com/user-attachments/assets/31b3d696-9751-4105-a2d5-db066ae342e6" />
+
+
+---
+
+## 4. Nuomos patvirtinimas (Owner)
+
+Owner patvirtina nuomos užsakymą:
+
+- Kvietimas: `confirmRental(1)`
+- Būsena pasikeičia į: `APPROVED`
+
+<img width="2331" height="1110" alt="image" src="https://github.com/user-attachments/assets/357e0330-911f-408c-8f31-944dcea286c4" />
+
+
+---
+
+## 5. Turto patikra (Inspector)
+
+Inspector atlieka patikrą:
+
+- Kvietimas: `inspectProperty(1, true)`
+- `inspectionPassed = true`
+- Būsena pasikeičia į: `INSPECTED`
+
+<img width="1960" height="1124" alt="image" src="https://github.com/user-attachments/assets/191684b9-abb3-4a06-b49e-e7054b15b86c" />
+
+---
+
+## 6. Depozito išmokėjimas
+
+Trečiasis asmuo iškviečia depozito išmokėjimą:
+
+- Kvietimas: `releaseDeposit(1)`
+- Kadangi `inspectionPassed = true`, **1 ETH pervedamas Owner**
+- Būsena pasikeičia į: `RELEASED`
+
+<img width="1636" height="869" alt="image" src="https://github.com/user-attachments/assets/8f97adb1-cf40-4224-8173-6568a3f841bb" />
+
+
+---
+
+## 7. Užsakymo galutinė būsena
+
+Užsakymo duomenys po testavimo:
+
+- `status = RELEASED`
+- `depositWei = 0`
+- `inspectionPassed = true`
+- Užfiksuoti visi laiko žymėjimai (`createdAt`, `approvedAt`, `inspectedAt`, `closedAt`)
+
+<img width="632" height="131" alt="image" src="https://github.com/user-attachments/assets/2058de98-aeb0-4cb0-a125-c54c690c098f" />
+<img width="403" height="338" alt="image" src="https://github.com/user-attachments/assets/1cf35ca9-6ef7-44ae-971f-88f5c4279d74" />
+
+
+
+---
+
+## 8. Balansai po testavimo (rezultatas)
+
+Po depozito išmokėjimo:
+
+- **Renter**: balansas sumažėjo ~1 ETH + gas
+- **Owner**: balansas padidėjo ~1 ETH (minus minimalus gas)
+- **Inspector**: balansas beveik nepakitęs (tik gas)
+
+<img width="875" height="163" alt="image" src="https://github.com/user-attachments/assets/c8a692cb-6569-419c-a49a-844fdaf5c34c" />
+
+
+Tai patvirtina, kad **depozitas buvo pervestas teisingai pagal verslo logiką**.
+
+---
+<img width="2878" height="1793" alt="kontrak1" src="https://github.com/user-attachments/assets/718e3de6-cc66-4f27-a6ac-e1036b2de20d" />
+
+<img width="2808" height="1095" alt="kontrakt2" src="https://github.com/user-attachments/assets/1d66cfa1-f297-4882-a8d3-0fc84ed01272" />
+
+
